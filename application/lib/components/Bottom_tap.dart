@@ -1,7 +1,7 @@
 import 'package:application/screen/Booking.dart';
 import 'package:application/screen/Home.dart';
 import 'package:application/screen/Profile.dart';
-import 'package:application/screen/TEST.dart';
+import 'package:application/screen/Search/Search.dart';
 import 'package:application/screen/Ticket.dart';
 import 'package:application/screen/vanbook.dart';
 import 'package:flutter/material.dart';
@@ -46,16 +46,16 @@ class _BottomTabState extends State<BottomTab> {
               //   text: 'Home',
               // ),
               GButton(
-                icon: Icons.home_repair_service_sharp,
-                text: 'Booking',
+                icon: Icons.home_sharp,
+                text: 'Home',
               ),
               GButton(
                 icon: Icons.qr_code_2,
                 text: 'Ticket',
               ),
               GButton(
-                icon: Icons.abc,
-                text: 'TEST',
+                icon: Icons.home_repair_service_sharp,
+                text: 'Booking',
               ),
               GButton(
                 icon: Icons.supervised_user_circle_sharp,
@@ -76,11 +76,14 @@ class _BottomTabState extends State<BottomTab> {
       // case 0:
       //   return const HomeScreen(); // Replace with your home screen widget
       case 0:
-        return const Booking(); // Replace with your booking screen widget
+        return SearchVan(
+          token: widget.token,
+        );
+      // Replace with your booking screen widget
       case 1:
         return const Ticket();
       case 2:
-        return const Test(); // Replace with your ticket screen widget
+        return const Booking();
       case 3:
         return Profile(
           token: widget.token,

@@ -78,7 +78,7 @@ class _BookingState extends State<Booking> {
                     itemCount: cars.length,
                     itemBuilder: (context, index) {
                       final car = cars[index];
-                      final station = car['station'];
+                      final station = car['fromstation'];
                       final number = car['number'];
                       final road = car['road'];
                       final imageURL = car['image'];

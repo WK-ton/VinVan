@@ -73,11 +73,16 @@ class _FromCarState extends State<FromCar> {
                         children: [
                           Row(
                             children: [
-                              Text(
-                                'สถานีขนส่ง: $station',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 16,
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context, station);
+                                },
+                                child: Text(
+                                  'สถานีขนส่ง: $station',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               )
                             ],
