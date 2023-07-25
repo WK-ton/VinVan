@@ -1,5 +1,7 @@
 import 'package:application/components/custom_icon.dart';
 import 'package:application/screen/Search/FromCar.dart';
+import 'package:application/screen/Search/ListCars.dart';
+import 'package:application/screen/Search/Time.dart';
 import 'package:application/screen/Search/ToCar.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -17,6 +19,8 @@ class SearchVan extends StatefulWidget {
 class _TestState extends State<SearchVan> {
   String FromStation = '';
   String ToStation = '';
+  String Time = '';
+
   late String name;
 
   @override
@@ -140,7 +144,7 @@ class _TestState extends State<SearchVan> {
                                 color: Colors.indigo,
                               ),
                             ),
-                            SizedBox(width: 20.0),
+                            const SizedBox(width: 20.0),
                             TextButton(
                               onPressed: () async {
                                 final selectedStation = await Navigator.push(
@@ -161,23 +165,43 @@ class _TestState extends State<SearchVan> {
                                 style: TextStyle(color: Colors.indigo),
                               ),
                               //controller: locationTextController,
-                            )
-                          ],
-                        ),
-                        const Divider(),
-                        Row(
-                          //mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.calendar_month,
-                                color: Colors.indigo,
-                              ),
                             ),
                           ],
                         ),
                         const Divider(),
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.more_time_outlined,
+                                color: Colors.indigo,
+                              ),
+                            ),
+                            const SizedBox(width: 20.0),
+                            TextButton(
+                              onPressed: () async {
+                                final selectedStation = await Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      child: TimeSelect(),
+                                      type: PageTransitionType.bottomToTop),
+                                );
+                                if (selectedStation != null) {
+                                  print('Selected station: $selectedStation');
+                                  setState(() {
+                                    Time = selectedStation;
+                                  });
+                                }
+                              },
+                              child: Text(
+                                'เลือกเวลา: $Time',
+                                style: TextStyle(color: Colors.indigo),
+                              ),
+                              //controller: locationTextController,
+                            ),
+                          ],
+                        ),
                         const SizedBox(
                           height: 20,
                         ),
@@ -186,7 +210,11 @@ class _TestState extends State<SearchVan> {
                             Navigator.push(
                               context,
                               PageTransition(
-                                  child: FromCar(),
+                                  child: ListCars(
+                                    fromStation: FromStation,
+                                    toStation: ToStation,
+                                    time: Time,
+                                  ),
                                   type: PageTransitionType.bottomToTop),
                             );
                           },

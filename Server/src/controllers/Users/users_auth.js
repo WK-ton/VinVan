@@ -42,7 +42,7 @@ exports.userLogin = (req, res) => {
         );
       }
       const token = jwt.sign({ userId: user.id, name: user.name }, "secret-key", {
-        expiresIn: "1h",
+        expiresIn: "10h",
       });
 
       res.send(

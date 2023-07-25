@@ -3,7 +3,9 @@ const cors = require('cors');
 const con = require('./src/config/Database');
 const cookieParser = require('cookie-parser');
 const authRouter = require('./src/routes/authRoutes');
-const carsRouter = require('./src/routes/carRoutes');
+const carsBangkhen = require('./src/routes/carRoutes/carBangKhen');
+const carsMonument = require('./src/routes/carRoutes/carMonument');
+const carsSaiTai = require('./src/routes/carRoutes/carSai_Tai');
 const app = express();
 app.use(cors());
 app.use(cookieParser());
@@ -22,7 +24,9 @@ con.connect(function(err){
 })
 
 app.use('/auth', authRouter);
-app.use('/car', carsRouter);
+app.use('/carBangkhen', carsBangkhen);
+app.use('/carMonument', carsMonument);
+app.use('/carSaiTai', carsSaiTai);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);

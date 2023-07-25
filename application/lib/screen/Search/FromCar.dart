@@ -101,13 +101,21 @@ class _FromCarState extends State<FromCar> {
   }
 
   void fetchStation() async {
-    const url = 'http://localhost:8081/car/getCars';
+    const url = 'http://localhost:8081/carBangkhen/getCars/cars_bangkhen';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
     final body = response.body;
     final json = jsonDecode(body);
+
+    final monumentCars = json['Result'];
+    for (final car in monumentCars) {
+      final station = car['tostation'];
+      if (!cars.any((car) => car['tostation'] == station)) {
+        cars.add(car);
+      }
+    }
     setState(() {
-      cars = json['Result'];
+      cars = cars;
     });
   }
 }

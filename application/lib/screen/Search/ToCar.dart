@@ -16,6 +16,7 @@ class _toState extends State<toCar> {
   void initState() {
     super.initState();
     fetchStation();
+    fetchCarMonument();
   }
 
   @override
@@ -63,7 +64,7 @@ class _toState extends State<toCar> {
               const SizedBox(height: 10),
               Expanded(
                 child: ListView.builder(
-                  itemCount: cars.length,
+                  itemCount: cars.toSet().toList().length,
                   itemBuilder: (context, index) {
                     final car = cars[index];
                     final station = car['tostation'];
@@ -101,13 +102,40 @@ class _toState extends State<toCar> {
   }
 
   void fetchStation() async {
-    const url = 'http://localhost:8081/car/getCars';
+    const url = 'http://localhost:8081/carBangkhen/getCars/cars_bangkhen';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
     final body = response.body;
     final json = jsonDecode(body);
+
+    final monumentCars = json['Result'];
+    for (final car in monumentCars) {
+      final station = car['tostation'];
+      if (!cars.any((car) => car['tostation'] == station)) {
+        cars.add(car);
+      }
+    }
     setState(() {
-      cars = json['Result'];
+      cars = cars;
+    });
+  }
+  void fetchCarMonument() async {
+    const url = 'http://localhost:8081/carMonument/getCars/cars_monument';
+    final uri = Uri.parse(url);
+    final response = await http.get(uri);
+    final body = response.body;
+    final json = jsonDecode(body);
+
+    // กรองข้อมูลที่ซ้ำกันก่อนเพิ่มเข้ากับ cars
+    final monumentCars = json['Result'];
+    for (final car in monumentCars) {
+      final station = car['tostation'];
+      if (!cars.any((car) => car['tostation'] == station)) {
+        cars.add(car);
+      }
+    }
+    setState(() {
+      cars = cars;
     });
   }
 }
