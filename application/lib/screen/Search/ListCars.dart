@@ -1,8 +1,11 @@
+import 'package:application/screen/Seat.dart';
+import 'package:application/screen/seat_booking.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:page_transition/page_transition.dart';
 import 'package:expandable_text/expandable_text.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ListCars extends StatefulWidget {
   final String fromStation;
@@ -75,22 +78,24 @@ class _ListCarsState extends State<ListCars> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text(
+                child: Text(
                   'ปิด',
+                  style: GoogleFonts.notoSansThai(),
                 ),
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.fromLTRB(80, 0, 0, 0),
                 child: Text(
                   'ผลการค้นหา',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                  style: GoogleFonts.notoSansThai(
+                      fontSize: 15, fontWeight: FontWeight.w500),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 20),
           TextField(
-            style: const TextStyle(color: Colors.indigo),
+            style: GoogleFonts.notoSansThai(color: Colors.indigo),
             decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.grey.shade300,
@@ -121,24 +126,29 @@ class _ListCarsState extends State<ListCars> {
                       return Container(
                         margin: const EdgeInsets.symmetric(vertical: 10),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15.0),
-                            color: Colors.white,
-                            boxShadow: const [
-                              BoxShadow(
-                                  blurRadius: 2.0,
-                                  spreadRadius: 1.5,
-                                  color: Colors.indigoAccent)
-                            ]),
+                          borderRadius: BorderRadius.circular(15.0),
+                          color: Colors.white,
+                          boxShadow: const [
+                            BoxShadow(
+                                blurRadius: 2.0,
+                                spreadRadius: 1.5,
+                                color: Colors.indigoAccent)
+                          ],
+                        ),
                         padding: const EdgeInsets.all(20),
                         child: InkWell(
                           onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   PageTransition(
-                            //       child: VanLayout(
-                            //           number: number, station: station),
-                            //       type: PageTransitionType.rightToLeft),
-                            // );
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: Seat(
+                                    number: number,
+                                    fromStation: fromstation,
+                                    toStation: tostation,
+                                    time: time,
+                                  ),
+                                  type: PageTransitionType.rightToLeft),
+                            );
                           },
                           child: Column(
                             children: [
@@ -152,7 +162,7 @@ class _ListCarsState extends State<ListCars> {
                                     children: [
                                       Text(
                                         'สถานี: $fromstation - $tostation',
-                                        style: const TextStyle(
+                                        style: GoogleFonts.notoSansThai(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 14,
                                         ),
@@ -162,7 +172,7 @@ class _ListCarsState extends State<ListCars> {
                                             vertical: 8),
                                         child: Text(
                                           'สาย : $number',
-                                          style: const TextStyle(
+                                          style: GoogleFonts.notoSansThai(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14,
                                           ),
@@ -172,9 +182,9 @@ class _ListCarsState extends State<ListCars> {
                                         crossAxisAlignment:
                                             WrapCrossAlignment.start,
                                         children: [
-                                          const Text(
+                                          Text(
                                             'เส้นทางที่ผ่าน: ',
-                                            style: TextStyle(
+                                            style: GoogleFonts.notoSansThai(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold),
                                           ),
@@ -183,8 +193,8 @@ class _ListCarsState extends State<ListCars> {
                                                 150, // Adjust the width as needed
                                             child: ExpandableText(
                                               road,
-                                              style:
-                                                  const TextStyle(fontSize: 15),
+                                              style: GoogleFonts.notoSansThai(
+                                                  fontSize: 15),
                                               expandText: 'See more',
                                               collapseText: 'See less',
                                               maxLines:
@@ -200,12 +210,18 @@ class _ListCarsState extends State<ListCars> {
                                   Column(
                                     //crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Text(time),
+                                      Text(
+                                        time,
+                                        style: GoogleFonts.notoSans(),
+                                      ),
                                       const Icon(Icons.navigate_next_outlined),
-                                      const Padding(
+                                      Padding(
                                         padding:
                                             EdgeInsets.symmetric(vertical: 8),
-                                        child: Text("Ticket"),
+                                        child: Text(
+                                          "Ticket",
+                                          style: GoogleFonts.notoSans(),
+                                        ),
                                       ),
                                       //Text("Dearm")
                                     ],

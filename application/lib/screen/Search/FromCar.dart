@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:google_fonts/google_fonts.dart';
 
 class FromCar extends StatefulWidget {
   const FromCar({super.key});
@@ -40,15 +41,15 @@ class _FromCarState extends State<FromCar> {
                     padding: const EdgeInsets.fromLTRB(80, 0, 0, 0),
                     child: Text(
                       'สถานีต้นทาง',
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                      style: GoogleFonts.notoSansThai(
+                          fontSize: 15, fontWeight: FontWeight.w500),
                     ),
                   )
                 ],
               ),
               const SizedBox(height: 20),
               TextField(
-                style: TextStyle(color: Colors.indigo),
+                style: GoogleFonts.notoSansThai(color: Colors.indigo),
                 decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey.shade300,
@@ -79,7 +80,7 @@ class _FromCarState extends State<FromCar> {
                                 },
                                 child: Text(
                                   'สถานีขนส่ง: $station',
-                                  style: TextStyle(
+                                  style: GoogleFonts.notoSansThai(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 16,
                                   ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:google_fonts/google_fonts.dart';
 
 class toCar extends StatefulWidget {
   const toCar({super.key});
@@ -35,21 +36,22 @@ class _toState extends State<toCar> {
                     },
                     child: Text(
                       'ปิด',
+                      style: GoogleFonts.notoSansThai(),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(80, 0, 0, 0),
                     child: Text(
                       'สถานีต้นทาง',
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                      style: GoogleFonts.notoSansThai(
+                          fontSize: 15, fontWeight: FontWeight.w500),
                     ),
                   )
                 ],
               ),
               const SizedBox(height: 20),
               TextField(
-                style: TextStyle(color: Colors.indigo),
+                style: GoogleFonts.notoSansThai(color: Colors.indigo),
                 decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey.shade300,
@@ -80,7 +82,7 @@ class _toState extends State<toCar> {
                                 },
                                 child: Text(
                                   'สถานีขนส่ง: $station',
-                                  style: TextStyle(
+                                  style: GoogleFonts.notoSansThai(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 16,
                                   ),
@@ -119,6 +121,7 @@ class _toState extends State<toCar> {
       cars = cars;
     });
   }
+
   void fetchCarMonument() async {
     const url = 'http://localhost:8081/carMonument/getCars/cars_monument';
     final uri = Uri.parse(url);

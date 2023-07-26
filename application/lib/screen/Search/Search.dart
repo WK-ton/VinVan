@@ -6,6 +6,7 @@ import 'package:application/screen/Search/ToCar.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SearchVan extends StatefulWidget {
   SearchVan({@required this.token, Key? key}) : super(key: key);
@@ -79,7 +80,7 @@ class _TestState extends State<SearchVan> {
                         padding: const EdgeInsets.all(10.0),
                         child: Text(
                           '🎊 $name',
-                          style: const TextStyle(
+                          style: GoogleFonts.notoSansThai(
                             fontWeight: FontWeight.w600,
                             fontSize: 28,
                             color: Colors.white,
@@ -129,7 +130,8 @@ class _TestState extends State<SearchVan> {
                               },
                               child: Text(
                                 'สถานีต้นทาง: $FromStation',
-                                style: TextStyle(color: Colors.indigo),
+                                style: GoogleFonts.notoSansThai(
+                                    color: Colors.indigo),
                               ),
                             )
                           ],
@@ -162,7 +164,8 @@ class _TestState extends State<SearchVan> {
                               },
                               child: Text(
                                 'สถานีปลายทาง: $ToStation',
-                                style: TextStyle(color: Colors.indigo),
+                                style: GoogleFonts.notoSansThai(
+                                    color: Colors.indigo),
                               ),
                               //controller: locationTextController,
                             ),
@@ -196,7 +199,8 @@ class _TestState extends State<SearchVan> {
                               },
                               child: Text(
                                 'เลือกเวลา: $Time',
-                                style: TextStyle(color: Colors.indigo),
+                                style: GoogleFonts.notoSansThai(
+                                    color: Colors.indigo),
                               ),
                               //controller: locationTextController,
                             ),
@@ -230,7 +234,10 @@ class _TestState extends State<SearchVan> {
                             minimumSize:
                                 MaterialStateProperty.all(const Size(200, 50)),
                           ),
-                          child: const Text('Search'),
+                          child: Text(
+                            'Search',
+                            style: GoogleFonts.notoSans(),
+                          ),
                         )
                       ],
                     ),

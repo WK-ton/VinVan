@@ -2,6 +2,7 @@ import 'package:application/screen/Booking.dart';
 import 'package:application/screen/Home.dart';
 import 'package:application/screen/Profile.dart';
 import 'package:application/screen/Search/Search.dart';
+import 'package:application/screen/Seat.dart';
 import 'package:application/screen/Ticket.dart';
 import 'package:application/screen/vanbook.dart';
 import 'package:flutter/material.dart';
@@ -53,10 +54,10 @@ class _BottomTabState extends State<BottomTab> {
                 icon: Icons.qr_code_2,
                 text: 'Ticket',
               ),
-              GButton(
-                icon: Icons.home_repair_service_sharp,
-                text: 'Booking',
-              ),
+              // GButton(
+              //   icon: Icons.home_repair_service_sharp,
+              //   text: 'Seat',
+              // ),
               GButton(
                 icon: Icons.supervised_user_circle_sharp,
                 text: 'Profile',
@@ -82,9 +83,9 @@ class _BottomTabState extends State<BottomTab> {
       // Replace with your booking screen widget
       case 1:
         return const Ticket();
+      // case 2:
+      //   return const Seat();
       case 2:
-        return const Booking();
-      case 3:
         return Profile(
           token: widget.token,
         ); // Replace with your user screen widget

@@ -80,10 +80,14 @@ flutter:
   assets:
     - assets/icon1.png
     - assets/icon2.png
+    - assets/sold.png
+    - assets/selected.png
+    - assets/unselected.png
     - assets/disabled.svg
     - assets/selected.svg
     - assets/sold.svg
     - assets/unselected.svg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
