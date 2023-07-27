@@ -8,16 +8,21 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Seat extends StatefulWidget {
-  const Seat(
-      {required this.number,
-      required this.fromStation,
-      required this.toStation,
-      required this.time});
+  const Seat({
+    required this.number,
+    required this.fromStation,
+    required this.toStation,
+    required this.time,
+    required this.road,
+    required this.token,
+  });
 
   final String number;
   final String fromStation;
   final String toStation;
   final String time;
+  final String road;
+  final String token;
 
   @override
   State<Seat> createState() => _SeatState();
@@ -61,18 +66,20 @@ class _SeatState extends State<Seat> {
             width: 390,
             height: 843,
             clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(color: Colors.white),
+            decoration: BoxDecoration(color: Color(0xFFF2F4F8)),
           ),
           Container(
             width: 390,
             height: 300,
             decoration: ShapeDecoration(
-                color: Color(0xFF5C24D4),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
+              color: Color(0xFF5C24D4),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20),
-                ))),
+                ),
+              ),
+            ),
           ),
           Column(
             children: [
@@ -257,9 +264,10 @@ class _SeatState extends State<Seat> {
                       color: Colors.white,
                       boxShadow: const [
                         BoxShadow(
-                            blurRadius: 3.5,
-                            spreadRadius: 1.5,
-                            color: Color(0xFF5C24D4))
+                          blurRadius: 3.5,
+                          spreadRadius: 1.5,
+                          color: Color.fromARGB(255, 179, 179, 179),
+                        )
                       ],
                     ),
                     child: Padding(
@@ -504,12 +512,15 @@ class _SeatState extends State<Seat> {
                                 context,
                                 PageTransition(
                                     child: StepBooking(
-                                        number: widget.number,
-                                        fromStation: widget.fromStation,
-                                        toStation: widget.toStation,
-                                        time: widget.time,
-                                        date: getCurrentDate(),
-                                        selectedSeats: selectedSeats.toList()),
+                                      number: widget.number,
+                                      fromStation: widget.fromStation,
+                                      toStation: widget.toStation,
+                                      time: widget.time,
+                                      date: getCurrentDate(),
+                                      road: widget.road,
+                                      selectedSeats: selectedSeats.toList(),
+                                      token: widget.token,
+                                    ),
                                     type: PageTransitionType.rightToLeft),
                               );
                             },

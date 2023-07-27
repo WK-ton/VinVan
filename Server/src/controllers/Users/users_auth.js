@@ -41,12 +41,12 @@ exports.userLogin = (req, res) => {
           JSON.stringify({ success: false, message: "Password not found" })
         );
       }
-      const token = jwt.sign({ userId: user.id, name: user.name }, "secret-key", {
+      const token = jwt.sign({ userId: user.id, name: user.name, email: user.email, phone: user.phone }, "secret-key", {
         expiresIn: "10h",
       });
 
       res.send(
-        JSON.stringify({ success: true, message: "Login successful", token, userId: user.id, name: user.name })
+        JSON.stringify({ success: true, message: "Login successful", token, userId: user.id, name: user.name, email: user.email, phone: user.phone })
       );
     });
   });

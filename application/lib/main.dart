@@ -4,7 +4,6 @@
 import 'package:application/Auth/Login.dart';
 import 'package:application/Auth/MainLogin.dart';
 import 'package:application/components/Bottom_tap.dart';
-import 'package:application/screen/seat_booking.dart';
 import 'package:application/screen/vanbook.dart';
 //import 'package:application/screen/HomeScreen.dart';
 import 'package:flutter/material.dart';

@@ -23,12 +23,16 @@ class _TestState extends State<SearchVan> {
   String Time = '';
 
   late String name;
+  late String email;
+  late String phone;
 
   @override
   void initState() {
     super.initState();
     Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
     name = jwtDecodedToken['name'];
+    email = jwtDecodedToken['email'];
+    phone = jwtDecodedToken['phone'];
   }
 
   @override
@@ -218,6 +222,7 @@ class _TestState extends State<SearchVan> {
                                     fromStation: FromStation,
                                     toStation: ToStation,
                                     time: Time,
+                                    token: widget.token,
                                   ),
                                   type: PageTransitionType.bottomToTop),
                             );
