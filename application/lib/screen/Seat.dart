@@ -166,7 +166,7 @@ class _SeatState extends State<Seat> {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            '${widget.time}',
+                            'เวลา : ${widget.time}',
                             style: GoogleFonts.notoSansThai(
                               color: Colors.white,
                               fontSize: 12,
@@ -262,13 +262,13 @@ class _SeatState extends State<Seat> {
                         topRight: Radius.circular(100),
                       ),
                       color: Colors.white,
-                      boxShadow: const [
-                        BoxShadow(
-                          blurRadius: 3.5,
-                          spreadRadius: 1.5,
-                          color: Color.fromARGB(255, 179, 179, 179),
-                        )
-                      ],
+                      // boxShadow: const [
+                      //   BoxShadow(
+                      //     blurRadius: 3.5,
+                      //     spreadRadius: 1.5,
+                      //     color: Color.fromARGB(255, 179, 179, 179),
+                      //   )
+                      // ],
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(

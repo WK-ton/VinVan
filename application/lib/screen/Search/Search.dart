@@ -1,4 +1,5 @@
 import 'package:application/components/custom_icon.dart';
+import 'package:application/screen/Search/Cars.dart';
 import 'package:application/screen/Search/FromCar.dart';
 import 'package:application/screen/Search/ListCars.dart';
 import 'package:application/screen/Search/Time.dart';
@@ -218,7 +219,7 @@ class _TestState extends State<SearchVan> {
                             Navigator.push(
                               context,
                               PageTransition(
-                                  child: ListCars(
+                                  child: Cars(
                                     fromStation: FromStation,
                                     toStation: ToStation,
                                     time: Time,

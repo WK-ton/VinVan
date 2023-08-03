@@ -424,35 +424,6 @@ class _StepBookingState extends State<StepBooking> {
           ),
         ],
       ),
-
-      // body: Center(
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       const SizedBox(height: 16),
-      //       Text(
-      //         '$fromStation - $toStation',
-      //         style: const GoogleFonts.notoSansThai(fontSize: 18),
-      //       ),
-      //       Text(
-      //         'สาย : $number',
-      //         style: const GoogleFonts.notoSansThai(fontSize: 18),
-      //       ),
-      //       Text(
-      //         'ที่นั่ง : ${selectedSeats.join(', ')}',
-      //         style: const GoogleFonts.notoSansThai(fontSize: 18),
-      //       ),
-      //       Text(
-      //         'เวลา : $time',
-      //         style: const GoogleFonts.notoSansThai(fontSize: 18),
-      //       ),
-      //       Text(
-      //         'วันที่ : $date',
-      //         style: const GoogleFonts.notoSansThai(fontSize: 18),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 }

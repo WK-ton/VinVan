@@ -1,6 +1,7 @@
 import 'package:application/screen/Booking.dart';
 import 'package:application/screen/Home.dart';
 import 'package:application/screen/Profile.dart';
+import 'package:application/screen/Search/Cars.dart';
 import 'package:application/screen/Search/Search.dart';
 import 'package:application/screen/Seat.dart';
 import 'package:application/screen/Ticket.dart';
@@ -84,7 +85,7 @@ class _BottomTabState extends State<BottomTab> {
       case 1:
         return const Ticket();
       // case 2:
-      //   return const Seat();
+      //   return const Cars();
       case 2:
         return Profile(
           token: widget.token,
