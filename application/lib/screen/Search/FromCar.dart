@@ -35,6 +35,8 @@ class _FromCarState extends State<FromCar> {
                     },
                     child: Text(
                       'ปิด',
+                      style: GoogleFonts.notoSansThai(
+                          fontWeight: FontWeight.w500, color: Colors.indigo),
                     ),
                   ),
                   Padding(
@@ -52,7 +54,7 @@ class _FromCarState extends State<FromCar> {
                 style: GoogleFonts.notoSansThai(color: Colors.indigo),
                 decoration: InputDecoration(
                     filled: true,
-                    fillColor: Colors.grey.shade300,
+                    fillColor: Color.fromARGB(255, 228, 228, 228),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                       borderSide: BorderSide.none,
@@ -79,11 +81,11 @@ class _FromCarState extends State<FromCar> {
                                   Navigator.pop(context, station);
                                 },
                                 child: Text(
-                                  'สถานีขนส่ง: $station',
+                                  'สถานีต้นทาง: $station',
                                   style: GoogleFonts.notoSansThai(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 16,
-                                  ),
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 16,
+                                      color: Colors.indigo),
                                 ),
                               )
                             ],

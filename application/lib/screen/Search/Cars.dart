@@ -150,7 +150,7 @@ class _CarsState extends State<Cars> {
                 child: Row(
                   children: [
                     Text(
-                      'Search Result',
+                      'ผลลัพธ์ทั้งหมด',
                       style: GoogleFonts.notoSansThai(
                         color: Color(0xFF2D3D50),
                         fontSize: 16,
@@ -180,10 +180,11 @@ class _CarsState extends State<Cars> {
                             child: Container(
                               width: 330,
                               height: 191,
-                              decoration: ShapeDecoration(
+                              decoration: BoxDecoration(
                                 color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Colors.indigo.withAlpha(50),
                                 ),
                               ),
                               child: InkWell(
@@ -315,10 +316,10 @@ class _CarsState extends State<Cars> {
                                     ),
                                   ),
                                   Positioned(
-                                    left: 289,
+                                    left: 268,
                                     top: 50,
                                     child: Text(
-                                      'มัดจำ',
+                                      'รอบเวลา',
                                       style: GoogleFonts.notoSansThai(
                                         color: Color(0xFF9B9999),
                                         fontSize: 10,
@@ -330,34 +331,34 @@ class _CarsState extends State<Cars> {
                                     left: 267,
                                     top: 66,
                                     child: Text(
-                                      '20 บาท',
+                                      '$time',
                                       style: GoogleFonts.notoSansThai(
-                                        color: Color(0xFF4C2CA4),
+                                        color: Color(0xFF2D3D50),
                                         fontSize: 14,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
                                   ),
-                                  Positioned(
-                                    left: 276,
-                                    top: 100,
-                                    child: Text(
-                                      'รอบเวลา',
-                                      style: GoogleFonts.notoSansThai(
-                                        color: Color(0xFF9B9999),
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ),
+                                  // Positioned(
+                                  //   left: 276,
+                                  //   top: 100,
+                                  //   child: Text(
+                                  //     'จอง',
+                                  //     style: GoogleFonts.notoSansThai(
+                                  //       color: Color(0xFF9B9999),
+                                  //       fontSize: 10,
+                                  //       fontWeight: FontWeight.w400,
+                                  //     ),
+                                  //   ),
+                                  // ),
                                   Positioned(
                                       left: 272,
                                       top: 116,
                                       child: Text(
-                                        time,
+                                        'จอง',
                                         style: GoogleFonts.notoSansThai(
-                                          color: Color(0xFF2D3D50),
-                                          fontSize: 14,
+                                          color: Color(0xFF4C2CA4),
+                                          fontSize: 18,
                                           fontWeight: FontWeight.w400,
                                         ),
                                       )),
@@ -405,18 +406,18 @@ class _CarsState extends State<Cars> {
                                           ),
                                         )),
                                   ),
-                                  Positioned(
-                                    top: 167,
-                                    left: 259,
-                                    child: Text(
-                                      'Buy Ticket',
-                                      style: GoogleFonts.notoSansThai(
-                                        color: Colors.indigo,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ),
+                                  // Positioned(
+                                  //   top: 167,
+                                  //   left: 259,
+                                  //   child: Text(
+                                  //     'Buy Ticket',
+                                  //     style: GoogleFonts.notoSansThai(
+                                  //       color: Colors.indigo,
+                                  //       fontSize: 12,
+                                  //       fontWeight: FontWeight.w400,
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ]),
                               ),
                             ),

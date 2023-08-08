@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:google_fonts/google_fonts.dart';
 
 class TimeSelect extends StatefulWidget {
   const TimeSelect({super.key});
@@ -33,26 +34,26 @@ class _TimeSelectState extends State<TimeSelect> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text(
-                      'ปิด',
-                    ),
+                    child: Text('ปิด',
+                        style: GoogleFonts.notoSansThai(
+                            fontWeight: FontWeight.w500, color: Colors.indigo)),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(80, 0, 0, 0),
                     child: Text(
                       'เลือกเวลา',
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                      style: GoogleFonts.notoSansThai(
+                          fontSize: 15, fontWeight: FontWeight.w500),
                     ),
                   )
                 ],
               ),
               const SizedBox(height: 20),
               TextField(
-                style: TextStyle(color: Colors.indigo),
+                style: GoogleFonts.notoSansThai(color: Colors.indigo),
                 decoration: InputDecoration(
                     filled: true,
-                    fillColor: Colors.grey.shade300,
+                    fillColor: Color.fromARGB(255, 228, 228, 228),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                       borderSide: BorderSide.none,
@@ -80,10 +81,10 @@ class _TimeSelectState extends State<TimeSelect> {
                                 },
                                 child: Text(
                                   'เวลา: $time',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 16,
-                                  ),
+                                  style: GoogleFonts.notoSansThai(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 16,
+                                      color: Colors.indigo),
                                 ),
                               )
                             ],

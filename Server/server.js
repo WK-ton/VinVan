@@ -6,6 +6,7 @@ const authRouter = require('./src/routes/authRoutes');
 const carsBangkhen = require('./src/routes/carRoutes/carBangKhen');
 const carsMonument = require('./src/routes/carRoutes/carMonument');
 const carsSaiTai = require('./src/routes/carRoutes/carSai_Tai');
+const carBooking = require('./src/routes/booking/carBooking');
 const app = express();
 app.use(cors());
 app.use(cookieParser());
@@ -27,6 +28,7 @@ app.use('/auth', authRouter);
 app.use('/carBangkhen', carsBangkhen);
 app.use('/carMonument', carsMonument);
 app.use('/carSaiTai', carsSaiTai);
+app.use('/booking', carBooking);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);

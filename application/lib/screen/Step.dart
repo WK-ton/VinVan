@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class StepBooking extends StatefulWidget {
   final List<String> selectedSeats;
@@ -33,6 +35,34 @@ class _StepBookingState extends State<StepBooking> {
   late String name;
   late String email;
   late String phone;
+
+  void confirmBooking() async {
+    Map<String, dynamic> data = {
+      'fromstation': widget.fromStation,
+      'tostation': widget.toStation,
+      'number': widget.number,
+      'seat': widget.selectedSeats.join(', '),
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'date': widget.date,
+      'time': widget.time,
+      'road': widget.road,
+    };
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:8081/booking/create/cars'),
+        body: data,
+      );
+      if (response.statusCode == 200) {
+        print('Booking successful');
+      } else {
+        print('Error booking car: ${response.body}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
   @override
   void initState() {
@@ -398,7 +428,7 @@ class _StepBookingState extends State<StepBooking> {
               ),
               const SizedBox(height: 50),
               TextButton(
-                onPressed: () {},
+                onPressed: confirmBooking,
                 child: Container(
                   width: 330,
                   height: 60,
