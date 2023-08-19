@@ -2,7 +2,6 @@ const con = require("../../config/Database");
 
 
 
-
 exports.booking_cars = (req, res) => {
     const sql = "INSERT INTO booking (`fromstation`,`tostation`, `number`, `seat`, `name`, `email`, `phone`, `date`, `time`, `road`) VALUES (?)";
     const values = [
