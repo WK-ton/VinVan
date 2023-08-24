@@ -1,9 +1,12 @@
+import 'package:application/components/Bottom_tap.dart';
+import 'package:application/screen/Search/Search.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:page_transition/page_transition.dart';
 
 class StepBooking extends StatefulWidget {
   final List<String> selectedSeats;
@@ -36,31 +39,39 @@ class _StepBookingState extends State<StepBooking> {
   late String email;
   late String phone;
 
-  void confirmBooking() async {
-    Map<String, dynamic> data = {
-      'fromstation': widget.fromStation,
-      'tostation': widget.toStation,
-      'number': widget.number,
-      'seat': widget.selectedSeats.join(', '),
-      'name': name,
-      'email': email,
-      'phone': phone,
-      'date': widget.date,
-      'time': widget.time,
-      'road': widget.road,
-    };
-    try {
-      final response = await http.post(
-        Uri.parse('http://localhost:8081/booking/create/cars'),
-        body: data,
+  Future<void> confirmBooking() async {
+    final url = 'http://localhost:8081/booking/create/cars';
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'fromstation': widget.fromStation,
+        'tostation': widget.toStation,
+        'number': widget.number,
+        'seat': widget.selectedSeats.join(', '),
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'date': widget.date,
+        'time': widget.time,
+        'road': widget.road,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Booking OK');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => BottomTab(
+                  token: widget.token,
+                )),
       );
-      if (response.statusCode == 200) {
-        print('Booking successful');
-      } else {
-        print('Error booking car: ${response.body}');
-      }
-    } catch (e) {
-      print('Error: $e');
+    } else {
+      print('Booking failed: ${response.reasonPhrase}');
     }
   }
 

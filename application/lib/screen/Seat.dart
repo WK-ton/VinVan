@@ -1,11 +1,12 @@
 import 'package:application/screen/Step.dart';
-import 'package:application/screen/vanbook.dart';
 import 'package:flutter/material.dart';
 import 'package:book_my_seat/book_my_seat.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Seat extends StatefulWidget {
   const Seat({
@@ -30,31 +31,17 @@ class Seat extends StatefulWidget {
 
 class _SeatState extends State<Seat> {
   Set<String> selectedSeats = {};
+
   final List<String> row1Names = ['A'];
   final List<String> row2Names = ['B'];
   final List<String> row3Names = ['C'];
   final List<String> row4Names = ['D'];
   final List<String> row5Names = ['E'];
 
-  // int calculateTotalPrice() {
-  //   int totalPrice = 0;
-  //   selectedSeats.forEach((seat) {
-  //     totalPrice +=
-  //         seatPrices[seat] ?? 0; // หากไม่พบราคาที่นั่งใน Map ให้ใช้ 0 แทน
-  //   });
-  //   return totalPrice;
-  // }
-
   String getCurrentDate() {
     final now = DateTime.now();
     final formatter = DateFormat('dd/MM/yy');
     return formatter.format(now);
-  }
-
-  List<String> formatSeatPrices(Map<String, int> seatPrices) {
-    return seatPrices.entries.map((entry) {
-      return '${entry.key}: ${entry.value}';
-    }).toList();
   }
 
   @override
@@ -291,20 +278,19 @@ class _SeatState extends State<Seat> {
                                     }
                                   });
                                 },
-                                stateModel: const SeatLayoutStateModel(
-                                  rows: 1,
-                                  cols: 1,
-                                  seatSvgSize: 40,
-                                  pathSelectedSeat: 'assets/selected.svg',
-                                  pathDisabledSeat: 'assets/disabled.svg',
-                                  pathSoldSeat: 'assets/sold.svg',
-                                  pathUnSelectedSeat: 'assets/unselected.svg',
-                                  currentSeatsState: [
-                                    [
-                                      SeatState.unselected,
-                                    ],
-                                  ],
-                                ),
+                                stateModel: SeatLayoutStateModel(
+                                    rows: 1,
+                                    cols: 1,
+                                    seatSvgSize: 40,
+                                    pathSelectedSeat: 'assets/selected.svg',
+                                    pathDisabledSeat: 'assets/disabled.svg',
+                                    pathSoldSeat: 'assets/sold.svg',
+                                    pathUnSelectedSeat: 'assets/unselected.svg',
+                                    currentSeatsState: [
+                                      [
+                                        SeatState.unselected,
+                                      ],
+                                    ]),
                               ),
                             ),
                           ),

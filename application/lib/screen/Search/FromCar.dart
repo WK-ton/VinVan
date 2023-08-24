@@ -36,7 +36,7 @@ class _FromCarState extends State<FromCar> {
                     child: Text(
                       'ปิด',
                       style: GoogleFonts.notoSansThai(
-                          fontWeight: FontWeight.w500, color: Colors.indigo),
+                          fontWeight: FontWeight.w500, color: Colors.black),
                     ),
                   ),
                   Padding(
@@ -49,20 +49,20 @@ class _FromCarState extends State<FromCar> {
                   )
                 ],
               ),
-              const SizedBox(height: 20),
-              TextField(
-                style: GoogleFonts.notoSansThai(color: Colors.indigo),
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Color.fromARGB(255, 228, 228, 228),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    hintText: "Search",
-                    suffixIcon: Icon(Icons.search_outlined),
-                    prefixIconColor: Colors.indigo),
-              ),
+              const Divider(height: 10),
+              // TextField(
+              //   style: GoogleFonts.notoSansThai(color: Colors.indigo),
+              //   decoration: InputDecoration(
+              //       filled: true,
+              //       fillColor: Color.fromARGB(255, 228, 228, 228),
+              //       border: OutlineInputBorder(
+              //         borderRadius: BorderRadius.circular(8.0),
+              //         borderSide: BorderSide.none,
+              //       ),
+              //       hintText: "Search",
+              //       suffixIcon: Icon(Icons.search_outlined),
+              //       prefixIconColor: Colors.indigo),
+              // ),
               const SizedBox(height: 10),
               Expanded(
                 child: ListView.builder(
@@ -81,7 +81,7 @@ class _FromCarState extends State<FromCar> {
                                   Navigator.pop(context, station);
                                 },
                                 child: Text(
-                                  'สถานีต้นทาง: $station',
+                                  '$station',
                                   style: GoogleFonts.notoSansThai(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 16,

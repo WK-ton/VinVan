@@ -18,6 +18,7 @@ class _toState extends State<toCar> {
     super.initState();
     fetchStation();
     fetchCarMonument();
+    fetchCarSatTai();
   }
 
   @override
@@ -37,33 +38,33 @@ class _toState extends State<toCar> {
                     child: Text(
                       'ปิด',
                       style: GoogleFonts.notoSansThai(
-                          fontWeight: FontWeight.w500, color: Colors.indigo),
+                          fontWeight: FontWeight.w500, color: Colors.grey),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(80, 0, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(70, 0, 0, 0),
                     child: Text(
-                      'สถานีต้นทาง',
+                      'สถานีปลายทาง',
                       style: GoogleFonts.notoSansThai(
                           fontSize: 15, fontWeight: FontWeight.w500),
                     ),
                   )
                 ],
               ),
-              const SizedBox(height: 20),
-              TextField(
-                style: GoogleFonts.notoSansThai(color: Colors.indigo),
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Color.fromARGB(255, 228, 228, 228),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    hintText: "Search",
-                    suffixIcon: Icon(Icons.search_outlined),
-                    prefixIconColor: Colors.indigo),
-              ),
+              const Divider(height: 10),
+              // TextField(
+              //   style: GoogleFonts.notoSansThai(color: Colors.indigo),
+              //   decoration: InputDecoration(
+              //       filled: true,
+              //       fillColor: Color.fromARGB(255, 228, 228, 228),
+              //       border: OutlineInputBorder(
+              //         borderRadius: BorderRadius.circular(8.0),
+              //         borderSide: BorderSide.none,
+              //       ),
+              //       hintText: "Search",
+              //       suffixIcon: Icon(Icons.search_outlined),
+              //       prefixIconColor: Colors.indigo),
+              // ),
               const SizedBox(height: 10),
               Expanded(
                 child: ListView.builder(
@@ -82,7 +83,7 @@ class _toState extends State<toCar> {
                                   Navigator.pop(context, station);
                                 },
                                 child: Text(
-                                  'สถานีปลายทาง: $station',
+                                  '$station',
                                   style: GoogleFonts.notoSansThai(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 16,
@@ -125,6 +126,26 @@ class _toState extends State<toCar> {
 
   void fetchCarMonument() async {
     const url = 'http://localhost:8081/carMonument/getCars/cars_monument';
+    final uri = Uri.parse(url);
+    final response = await http.get(uri);
+    final body = response.body;
+    final json = jsonDecode(body);
+
+    // กรองข้อมูลที่ซ้ำกันก่อนเพิ่มเข้ากับ cars
+    final monumentCars = json['Result'];
+    for (final car in monumentCars) {
+      final station = car['tostation'];
+      if (!cars.any((car) => car['tostation'] == station)) {
+        cars.add(car);
+      }
+    }
+    setState(() {
+      cars = cars;
+    });
+  }
+
+  void fetchCarSatTai() async {
+    const url = 'http://localhost:8081/carSaiTai/getCars/cars_SatTai';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
     final body = response.body;

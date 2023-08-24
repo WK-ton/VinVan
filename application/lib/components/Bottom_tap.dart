@@ -1,11 +1,8 @@
-import 'package:application/screen/Booking.dart';
-import 'package:application/screen/Home.dart';
 import 'package:application/screen/Profile.dart';
 import 'package:application/screen/Search/Cars.dart';
 import 'package:application/screen/Search/Search.dart';
 import 'package:application/screen/Seat.dart';
 import 'package:application/screen/Ticket.dart';
-import 'package:application/screen/vanbook.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 

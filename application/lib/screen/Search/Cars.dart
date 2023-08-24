@@ -1,4 +1,3 @@
-import 'package:application/screen/Home.dart';
 import 'package:application/screen/Seat.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -67,20 +66,25 @@ class _CarsState extends State<Cars> {
 
     final api1Url = 'http://localhost:8081/carBangkhen/getCars/cars_bangkhen';
     final api2Url = 'http://localhost:8081/carMonument/getCars/cars_monument';
+    final api3Url = 'http://localhost:8081/carSaiTai/getCars/cars_SatTai';
 
     final api1Response = await http.get(Uri.parse(api1Url));
     final api2Response = await http.get(Uri.parse(api2Url));
+    final api3Response = await http.get(Uri.parse(api3Url));
 
     final api1Body = api1Response.body;
     final api2Body = api2Response.body;
+    final api3Body = api3Response.body;
 
     final api1Json = jsonDecode(api1Body);
     final api2Json = jsonDecode(api2Body);
+    final api3Json = jsonDecode(api3Body);
 
     final api1Cars = api1Json['Result'];
     final api2Cars = api2Json['Result'];
+    final api3Cars = api3Json['Result'];
 
-    final allCars = [...api1Cars, ...api2Cars];
+    final allCars = [...api1Cars, ...api2Cars, ...api3Cars];
 
     cars = allCars.where((car) {
       return car['fromstation'] == widget.fromStation &&
