@@ -24,7 +24,6 @@ class Seat extends StatefulWidget {
   final String time;
   final String road;
   final String token;
-
   @override
   State<Seat> createState() => _SeatState();
 }
@@ -42,6 +41,10 @@ class _SeatState extends State<Seat> {
     final now = DateTime.now();
     final formatter = DateFormat('dd/MM/yy');
     return formatter.format(now);
+  }
+
+  double calculateTotalPrice(int seatCount, double pricePerSeat) {
+    return seatCount * pricePerSeat;
   }
 
   @override
@@ -272,6 +275,26 @@ class _SeatState extends State<Seat> {
                                     String seatKey =
                                         '${row1Names[rowI]}${colI + 1}';
                                     if (seatState == SeatState.selected) {
+                                      if (selectedSeats.length >= 5) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text('เกินข้อผิดพลาด'),
+                                                content: Text(
+                                                    'คุณเลือกที่นั่งเกิน 5 ที่นั่ง'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text('ตกลง'),
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                        return;
+                                      }
                                       selectedSeats.add(seatKey);
                                     } else {
                                       selectedSeats.remove(seatKey);
@@ -302,6 +325,26 @@ class _SeatState extends State<Seat> {
                                 onSeatStateChanged: (rowI, colI, seatState) {
                                   setState(() {
                                     if (seatState == SeatState.selected) {
+                                      if (selectedSeats.length >= 5) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text('เกินข้อผิดพลาด'),
+                                                content: Text(
+                                                    'คุณเลือกที่นั่งเกิน 5 ที่นั่ง'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text('ตกลง'),
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                        return;
+                                      }
                                       selectedSeats
                                           .add('${row2Names[rowI]}${colI + 1}');
                                     } else {
@@ -337,6 +380,26 @@ class _SeatState extends State<Seat> {
                                 onSeatStateChanged: (rowI, colI, seatState) {
                                   setState(() {
                                     if (seatState == SeatState.selected) {
+                                      if (selectedSeats.length >= 5) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text('เกินข้อผิดพลาด'),
+                                                content: Text(
+                                                    'คุณเลือกที่นั่งเกิน 5 ที่นั่ง'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text('ตกลง'),
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                        return;
+                                      }
                                       selectedSeats
                                           .add('${row3Names[rowI]}${colI + 1}');
                                     } else {
@@ -373,6 +436,26 @@ class _SeatState extends State<Seat> {
                                   setState(
                                     () {
                                       if (seatState == SeatState.selected) {
+                                        if (selectedSeats.length >= 5) {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: Text('เกินข้อผิดพลาด'),
+                                                  content: Text(
+                                                      'คุณเลือกที่นั่งเกิน 5 ที่นั่ง'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Text('ตกลง'),
+                                                    )
+                                                  ],
+                                                );
+                                              });
+                                          return;
+                                        }
                                         selectedSeats.add(
                                             '${row4Names[rowI]}${colI + 1}');
                                       } else {
@@ -409,6 +492,26 @@ class _SeatState extends State<Seat> {
                                 onSeatStateChanged: (rowI, colI, seatState) {
                                   setState(() {
                                     if (seatState == SeatState.selected) {
+                                      if (selectedSeats.length >= 5) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text('เกินข้อผิดพลาด'),
+                                                content: Text(
+                                                    'คุณเลือกที่นั่งเกิน 5 ที่นั่ง'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text('ตกลง'),
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                        return;
+                                      }
                                       selectedSeats
                                           .add('${row5Names[rowI]}${colI + 1}');
                                     } else {
@@ -446,7 +549,7 @@ class _SeatState extends State<Seat> {
                 children: [
                   Container(
                     width: 390,
-                    height: 103,
+                    height: 110,
                     decoration: ShapeDecoration(
                       color: Color(0xFF5C24D4),
                       shape: RoundedRectangleBorder(
@@ -464,7 +567,7 @@ class _SeatState extends State<Seat> {
                       children: [
                         Container(
                           width: 170,
-                          height: 60,
+                          height: 70,
                           decoration: ShapeDecoration(
                             color: Color(0xFF262626),
                             shape: RoundedRectangleBorder(
@@ -482,8 +585,13 @@ class _SeatState extends State<Seat> {
                                       fontSize: 12,
                                       fontWeight: FontWeight.w400),
                                 ),
-                                SizedBox(
-                                  height: 8,
+                                const SizedBox(height: 8),
+                                Text(
+                                  'รวมเงิน: ${calculateTotalPrice(selectedSeats.length, 30)} บาท',
+                                  style: GoogleFonts.notoSansThai(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400),
                                 ),
                               ],
                             ),
@@ -506,6 +614,7 @@ class _SeatState extends State<Seat> {
                                       road: widget.road,
                                       selectedSeats: selectedSeats.toList(),
                                       token: widget.token,
+                                      
                                     ),
                                     type: PageTransitionType.rightToLeft),
                               );

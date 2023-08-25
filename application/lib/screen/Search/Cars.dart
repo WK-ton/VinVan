@@ -343,29 +343,42 @@ class _CarsState extends State<Cars> {
                                       ),
                                     ),
                                   ),
-                                  // Positioned(
-                                  //   left: 276,
-                                  //   top: 100,
-                                  //   child: Text(
-                                  //     'จอง',
-                                  //     style: GoogleFonts.notoSansThai(
-                                  //       color: Color(0xFF9B9999),
-                                  //       fontSize: 10,
-                                  //       fontWeight: FontWeight.w400,
-                                  //     ),
-                                  //   ),
-                                  // ),
                                   Positioned(
-                                      left: 272,
-                                      top: 116,
-                                      child: Text(
-                                        'จอง',
-                                        style: GoogleFonts.notoSansThai(
-                                          color: Color(0xFF4C2CA4),
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      )),
+                                    left: 280,
+                                    top: 100,
+                                    child: Text(
+                                      'มัดจำ',
+                                      style: GoogleFonts.notoSansThai(
+                                        color: Color(0xFF9B9999),
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 260,
+                                    top: 116,
+                                    child: Text(
+                                      '30 บาท',
+                                      style: GoogleFonts.notoSansThai(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 272,
+                                    top: 160,
+                                    child: Text(
+                                      'จอง',
+                                      style: GoogleFonts.notoSansThai(
+                                        color: Color(0xFF4C2CA4),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
                                   Positioned(
                                     top: 160,
                                     left: 20,

@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.post('/create/cars', BookingCars.booking_cars);
 router.get('/get/user/:id', BookingCars.booking_users);
+router.post('/create/qrcode', BookingCars.QrCode);
 
 
 module.exports = router;

@@ -1,4 +1,5 @@
 import 'package:application/components/Bottom_tap.dart';
+import 'package:application/screen/QR_code.dart';
 import 'package:application/screen/Search/Search.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +18,8 @@ class StepBooking extends StatefulWidget {
   final String date;
   final String road;
   final String token;
+  String qrCodeResult =
+      "data:image/png;base64,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";
 
   StepBooking({
     Key? key,
@@ -65,10 +68,9 @@ class _StepBookingState extends State<StepBooking> {
       print('Booking OK');
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => BottomTab(
-                  token: widget.token,
-                )),
+        PageTransition(
+            child: QRCodePaymentScreen(widget.qrCodeResult),
+            type: PageTransitionType.bottomToTop),
       );
     } else {
       print('Booking failed: ${response.reasonPhrase}');
@@ -302,7 +304,7 @@ class _StepBookingState extends State<StepBooking> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      width: 240,
+                      width: 140,
                       height: 80,
                       decoration: ShapeDecoration(
                         color: Colors.white,
@@ -317,11 +319,6 @@ class _StepBookingState extends State<StepBooking> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'เส้นทางที่ผ่าน : ',
-                                style: GoogleFonts.notoSansThai(
-                                    fontSize: 13, fontWeight: FontWeight.w400),
-                              ),
                               Text(
                                 'กดเพิ่มดูเส้นทางที่ผ่าน',
                                 style: GoogleFonts.notoSansThai(
@@ -352,13 +349,48 @@ class _StepBookingState extends State<StepBooking> {
                             Text(
                               'ที่นั่ง',
                               style: GoogleFonts.notoSansThai(
-                                color: Color(0xFF1A1B1D),
+                                color: Color(0xFF4C2CA4),
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
                             Text(
                               '${widget.selectedSeats.join(' , ')}',
+                              style: GoogleFonts.notoSansThai(
+                                color: Color(0xFF1A1B1D),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Container(
+                      width: 90,
+                      height: 80,
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'มัดจำ',
+                              style: GoogleFonts.notoSansThai(
+                                color: Color(0xFF4C2CA4),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            Text(
+                              '${widget.selectedSeats.length * 30} บาท',
                               style: GoogleFonts.notoSansThai(
                                 color: Color(0xFF1A1B1D),
                                 fontSize: 13,
@@ -394,7 +426,7 @@ class _StepBookingState extends State<StepBooking> {
                             'ข้อมูลส่วนตัว',
                             style: GoogleFonts.notoSansThai(
                               color: Color(0xFF4C2CA4),
-                              fontSize: 10,
+                              fontSize: 14,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -439,7 +471,14 @@ class _StepBookingState extends State<StepBooking> {
               ),
               const SizedBox(height: 50),
               TextButton(
-                onPressed: confirmBooking,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                        child: QRCodePaymentScreen(widget.qrCodeResult),
+                        type: PageTransitionType.bottomToTop),
+                  );
+                },
                 child: Container(
                   width: 330,
                   height: 60,
