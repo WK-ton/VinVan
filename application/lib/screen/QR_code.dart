@@ -1,29 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'dart:convert';
 
 class QRCodePaymentScreen extends StatelessWidget {
-  final String qrCodeUrl;
+  final String qrCodeData;
 
-  QRCodePaymentScreen(this.qrCodeUrl);
+  const QRCodePaymentScreen({required this.qrCodeData, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('QR Code Payment'),
-        backgroundColor: Color(0xFF5C24D4),
+        backgroundColor: Color(0xFF4C2CA4),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            QrImageView(
-              data: qrCodeUrl, // ใช้ qrCodeUrl เพื่อสร้าง QR code
-              version: QrVersions.auto,
-              size: 300.0,
+            Image.memory(
+              base64Decode(
+                  qrCodeData.split(',')[1]), // Decode base64 image data
+              width: 200,
+              height: 200,
             ),
-            SizedBox(height: 20),
-            Text('Scan QR Code to Make Payment'),
+            const SizedBox(height: 20),
+            Text(
+              'Scan this QR code for payment',
+              style: TextStyle(fontSize: 18),
+            ),
           ],
         ),
       ),

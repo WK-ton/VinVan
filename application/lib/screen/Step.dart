@@ -8,6 +8,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:page_transition/page_transition.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:mysql1/mysql1.dart';
 
 class StepBooking extends StatefulWidget {
   final List<String> selectedSeats;
@@ -18,8 +20,6 @@ class StepBooking extends StatefulWidget {
   final String date;
   final String road;
   final String token;
-  String qrCodeResult =
-      "data:image/png;base64,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";
 
   StepBooking({
     Key? key,
@@ -42,40 +42,172 @@ class _StepBookingState extends State<StepBooking> {
   late String email;
   late String phone;
 
-  Future<void> confirmBooking() async {
-    final url = 'http://localhost:8081/booking/create/cars';
+  // Future<void> insertBookingData(
+  //   String fromStation,
+  //   String toStation,
+  //   String seats,
+  //   String name,
+  //   String email,
+  //   String phone,
+  //   String date,
+  //   String time,
+  //   String road,
+  //   double paymentAmount,
+  // ) async {
+  //   final url =
+  //       'http://localhost:8081/booking/create/cars'; // Update with your actual URL
+  //   final paymentData = {
+  //     'amount': paymentAmount,
+  //     'recipitent': 'Worapong',
+  //     'transactionId': '4100602853'
+  //   };
 
+  //   final response = await http.post(
+  //     Uri.parse(url),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     },
+  //     body: jsonEncode({
+  //       'fromstation': fromStation,
+  //       'tostation': toStation,
+  //       'seat': seats,
+  //       'name': name,
+  //       'email': email,
+  //       'phone': phone,
+  //       'date': date,
+  //       'time': time,
+  //       'road': road,
+  //       'payment': jsonEncode(paymentData)
+  //     }),
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     print('Booking data inserted into MySQL successfully');
+  //   } else {
+  //     print(
+  //         'Failed to insert booking data into MySQL: ${response.reasonPhrase}');
+  //   }
+  // }
+
+  // Future<void> confirmBooking() async {
+  //   final url = 'http://localhost:8081/booking/create/cars';
+  //   final double paymentAmount = widget.selectedSeats.length * 30.0;
+  //   final paymentData = {
+  //     'amount': paymentAmount,
+  //     'recipitent': 'Worapong',
+  //     'transactionId': '4100602853'
+  //   };
+
+  //   final response = await http.post(
+  //     Uri.parse(url),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     },
+  //     body: jsonEncode({
+  // 'fromstation': widget.fromStation,
+  // 'tostation': widget.toStation,
+  // 'number': widget.number,
+  // 'seat': widget.selectedSeats.join(', '),
+  // 'name': name,
+  // 'email': email,
+  // 'phone': phone,
+  // 'date': widget.date,
+  // 'time': widget.time,
+  // 'road': widget.road,
+  // 'payment': jsonEncode(paymentData)
+  //     }),
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     print('Booking OK');
+  //     final bookingData = {'payment': jsonEncode(paymentData)};
+  //     final qrCodeData = jsonEncode(bookingData);
+  //     Navigator.push(
+  //       context,
+  //       PageTransition(
+  //         child: QRCodePaymentScreen(qrCodeData: jsonEncode(qrCodeData)),
+  //         type: PageTransitionType.bottomToTop,
+  //       ),
+  //     );
+  //   } else {
+  //     print('Booking failed: ${response.reasonPhrase}');
+  //   }
+  // }
+  Future<String> generateQRCode() async {
+    final url =
+        'http://localhost:8081/booking/create/qrcode'; // Update with your actual URL
     final response = await http.post(
       Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
-        'fromstation': widget.fromStation,
-        'tostation': widget.toStation,
-        'number': widget.number,
-        'seat': widget.selectedSeats.join(', '),
-        'name': name,
-        'email': email,
-        'phone': phone,
-        'date': widget.date,
-        'time': widget.time,
-        'road': widget.road,
+        'amount': widget.selectedSeats.length * 30.0,
       }),
     );
 
     if (response.statusCode == 200) {
-      print('Booking OK');
+      final responseData = jsonDecode(response.body);
+      return responseData['Result'];
+    } else {
+      print('QR code generation failed: ${response.reasonPhrase}');
+      return ''; // Return an empty string or some error message
+    }
+  }
+
+  Future<void> confirmBooking() async {
+    final qrCodeData = await generateQRCode();
+    if (qrCodeData.isNotEmpty) {
+      // await insertBookingData(
+      //   widget.fromStation,
+      //   widget.toStation,
+      //   widget.selectedSeats.join(', '),
+      //   name,
+      //   email,
+      //   phone,
+      //   widget.date,
+      //   widget.time,
+      //   widget.road,
+      //   widget.selectedSeats.length * 30.0,
+      // );
       Navigator.push(
         context,
         PageTransition(
-            child: QRCodePaymentScreen(widget.qrCodeResult),
-            type: PageTransitionType.bottomToTop),
+          child: QRCodePaymentScreen(qrCodeData: qrCodeData),
+          type: PageTransitionType.bottomToTop,
+        ),
       );
-    } else {
-      print('Booking failed: ${response.reasonPhrase}');
     }
-  }
+//   Future<void> insertBookingData(
+// ) async {
+//   final url = 'http://localhost:8081/booking/create/cars'; // Update with your actual API endpoint
+//   final response = await http.post(
+//     Uri.parse(url),
+//     headers: <String, String>{
+//       'Content-Type': 'application/json; charset=UTF-8',
+//     },
+//     body: jsonEncode({
+//         'fromstation': widget.fromStation,
+//         'tostation': widget.toStation,
+//         'number': widget.number,
+//         'seat': widget.selectedSeats.join(', '),
+//         'name': name,
+//         'email': email,
+//         'phone': phone,
+//         'date': widget.date,
+//         'time': widget.time,
+//         'road': widget.road,
+//         //'payment': jsonEncode(paymentData)
+//     }),
+//   );
+
+//   if (response.statusCode == 200) {
+//     print('Booking data inserted successfully');
+//   } else {
+//     print('Failed to insert booking data: ${response.reasonPhrase}');
+//   }
+// }
+}
 
   @override
   void initState() {
@@ -472,12 +604,7 @@ class _StepBookingState extends State<StepBooking> {
               const SizedBox(height: 50),
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                        child: QRCodePaymentScreen(widget.qrCodeResult),
-                        type: PageTransitionType.bottomToTop),
-                  );
+                  confirmBooking();
                 },
                 child: Container(
                   width: 330,

@@ -4,7 +4,7 @@ const generatePayload = require('promptpay-qr');
 const _ = require('lodash');
 
 exports.booking_cars = (req, res) => {
-    const sql = "INSERT INTO booking (`fromstation`,`tostation`, `number`, `seat`, `name`, `email`, `phone`, `date`, `time`, `road`) VALUES (?)";
+    const sql = "INSERT INTO booking (`fromstation`,`tostation`, `number`, `seat`, `name`, `email`, `phone`, `date`, `time`, `road`, `amount`) VALUES (?)";
     const values = [
       req.body.fromstation,
       req.body.tostation,
@@ -15,12 +15,13 @@ exports.booking_cars = (req, res) => {
       req.body.phone,
       req.body.date,
       req.body.time,
-      req.body.road
+      req.body.road,
+      req.body.amount
     ];
-    con.query(sql,[values], (err, result) => {
+    con.query(sql,[values], async (err, result) => {
       if (err) {
         return res.json({ Error: 'Error booking car' });
-      }
+      }     
       return res.json({ Status: 'Success' });
     });
   };
@@ -41,22 +42,23 @@ exports.booking_users = (req, res) => {
   });
 }
 
-exports.QrCode = (req, res) => {
-  const amount = parseFloat(_.get(req, ['body', 'amount']));
+exports.qrCode = (req, res) => {
+  const amount = parseFloat(_.get(req, ["body", "amount"]));
   const mobileNumber = '0969404583';
   const payload = generatePayload(mobileNumber, {amount});
+
   const option = {
     color: {
       dark: '#000',
       light: '#fff'
     }
   }
-  QRCode.toDataURL(payload, option, (err, url) => {
+  QRCode.toDataURL(payload, option,(err,url) => {
     if(err) {
-      console.log('generate fail');
+      console.log('generate fail')
       return res.status(400).json({
         RespCode: 400,
-        RespMessage: 'bad: ' + err
+        RespMessage: 'bad : ' + err
       })
     }
     else {
@@ -68,3 +70,4 @@ exports.QrCode = (req, res) => {
     }
   })
 }
+
