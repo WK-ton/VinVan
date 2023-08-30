@@ -42,97 +42,6 @@ class _StepBookingState extends State<StepBooking> {
   late String email;
   late String phone;
 
-  // Future<void> insertBookingData(
-  //   String fromStation,
-  //   String toStation,
-  //   String seats,
-  //   String name,
-  //   String email,
-  //   String phone,
-  //   String date,
-  //   String time,
-  //   String road,
-  //   double paymentAmount,
-  // ) async {
-  //   final url =
-  //       'http://localhost:8081/booking/create/cars'; // Update with your actual URL
-  //   final paymentData = {
-  //     'amount': paymentAmount,
-  //     'recipitent': 'Worapong',
-  //     'transactionId': '4100602853'
-  //   };
-
-  //   final response = await http.post(
-  //     Uri.parse(url),
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //     },
-  //     body: jsonEncode({
-  //       'fromstation': fromStation,
-  //       'tostation': toStation,
-  //       'seat': seats,
-  //       'name': name,
-  //       'email': email,
-  //       'phone': phone,
-  //       'date': date,
-  //       'time': time,
-  //       'road': road,
-  //       'payment': jsonEncode(paymentData)
-  //     }),
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     print('Booking data inserted into MySQL successfully');
-  //   } else {
-  //     print(
-  //         'Failed to insert booking data into MySQL: ${response.reasonPhrase}');
-  //   }
-  // }
-
-  // Future<void> confirmBooking() async {
-  //   final url = 'http://localhost:8081/booking/create/cars';
-  //   final double paymentAmount = widget.selectedSeats.length * 30.0;
-  //   final paymentData = {
-  //     'amount': paymentAmount,
-  //     'recipitent': 'Worapong',
-  //     'transactionId': '4100602853'
-  //   };
-
-  //   final response = await http.post(
-  //     Uri.parse(url),
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //     },
-  //     body: jsonEncode({
-  // 'fromstation': widget.fromStation,
-  // 'tostation': widget.toStation,
-  // 'number': widget.number,
-  // 'seat': widget.selectedSeats.join(', '),
-  // 'name': name,
-  // 'email': email,
-  // 'phone': phone,
-  // 'date': widget.date,
-  // 'time': widget.time,
-  // 'road': widget.road,
-  // 'payment': jsonEncode(paymentData)
-  //     }),
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     print('Booking OK');
-  //     final bookingData = {'payment': jsonEncode(paymentData)};
-  //     final qrCodeData = jsonEncode(bookingData);
-  //     Navigator.push(
-  //       context,
-  //       PageTransition(
-  //         child: QRCodePaymentScreen(qrCodeData: jsonEncode(qrCodeData)),
-  //         type: PageTransitionType.bottomToTop,
-  //       ),
-  //     );
-  //   } else {
-  //     print('Booking failed: ${response.reasonPhrase}');
-  //   }
-  // }
   Future<String> generateQRCode() async {
     final url =
         'http://localhost:8081/booking/create/qrcode'; // Update with your actual URL
@@ -158,56 +67,28 @@ class _StepBookingState extends State<StepBooking> {
   Future<void> confirmBooking() async {
     final qrCodeData = await generateQRCode();
     if (qrCodeData.isNotEmpty) {
-      // await insertBookingData(
-      //   widget.fromStation,
-      //   widget.toStation,
-      //   widget.selectedSeats.join(', '),
-      //   name,
-      //   email,
-      //   phone,
-      //   widget.date,
-      //   widget.time,
-      //   widget.road,
-      //   widget.selectedSeats.length * 30.0,
-      // );
       Navigator.push(
         context,
         PageTransition(
-          child: QRCodePaymentScreen(qrCodeData: qrCodeData),
+          child: QRCodePaymentScreen(
+            qrCodeData: qrCodeData,
+            number: widget.number,
+            fromStation: widget.fromStation,
+            toStation: widget.toStation,
+            time: widget.time,
+            date: widget.date,
+            road: widget.road,
+            selectedSeats: widget.selectedSeats,
+            token: widget.token,
+            name: name,
+            email: email,
+            phone: phone,
+          ),
           type: PageTransitionType.bottomToTop,
         ),
       );
     }
-//   Future<void> insertBookingData(
-// ) async {
-//   final url = 'http://localhost:8081/booking/create/cars'; // Update with your actual API endpoint
-//   final response = await http.post(
-//     Uri.parse(url),
-//     headers: <String, String>{
-//       'Content-Type': 'application/json; charset=UTF-8',
-//     },
-//     body: jsonEncode({
-//         'fromstation': widget.fromStation,
-//         'tostation': widget.toStation,
-//         'number': widget.number,
-//         'seat': widget.selectedSeats.join(', '),
-//         'name': name,
-//         'email': email,
-//         'phone': phone,
-//         'date': widget.date,
-//         'time': widget.time,
-//         'road': widget.road,
-//         //'payment': jsonEncode(paymentData)
-//     }),
-//   );
-
-//   if (response.statusCode == 200) {
-//     print('Booking data inserted successfully');
-//   } else {
-//     print('Failed to insert booking data: ${response.reasonPhrase}');
-//   }
-// }
-}
+  }
 
   @override
   void initState() {
@@ -617,7 +498,7 @@ class _StepBookingState extends State<StepBooking> {
                   ),
                   child: Center(
                     child: Text(
-                      'ยืนยันการจอง',
+                      'ชำระเงิน',
                       style: GoogleFonts.notoSansThai(
                         color: Colors.white,
                         fontSize: 20,

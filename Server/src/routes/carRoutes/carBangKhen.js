@@ -1,5 +1,4 @@
 const express = require('express');
-// const CarController = require ('../controllers/Admin/carController');
 const CarsBangkhen = require('../../controllers/Admin/CarControllers/carsBangKhen');
 const router = express.Router();
 const upload = require('../../middleware/multer');

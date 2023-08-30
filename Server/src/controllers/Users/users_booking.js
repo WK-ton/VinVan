@@ -4,7 +4,26 @@ const generatePayload = require('promptpay-qr');
 const _ = require('lodash');
 
 exports.booking_cars = (req, res) => {
-    const sql = "INSERT INTO booking (`fromstation`,`tostation`, `number`, `seat`, `name`, `email`, `phone`, `date`, `time`, `road`, `amount`) VALUES (?)";
+  const checksql = 'SELECT COUNT(*) AS count FROM booking WHERE `fromstation` = ? AND `tostation` = ? AND `seat` = ? AND `date` = ? AND `time` = ?';
+  const check = [
+    req.body.fromstation,
+    req.body.tostation,
+    req.body.seat,
+    req.body.date,
+    req.body.time,
+  ];
+  
+  con.query(checksql, check, (err, result) => {
+    if (err) {
+      console.error('Error checking existing data:', err);
+      return res.status(500).json({ error: 'Error checking existing data' });
+    }
+
+    if (result[0].count > 0) {
+      return res.status(400).json({ error: 'Data already exists in the system' });
+    }
+  
+    const sql = 'INSERT INTO booking (`fromstation`, `tostation`, `number`, `seat`, `name`, `email`, `phone`, `date`, `time`, `road`, `amount`, `image`, `time_image`, `date_image`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     const values = [
       req.body.fromstation,
       req.body.tostation,
@@ -16,15 +35,24 @@ exports.booking_cars = (req, res) => {
       req.body.date,
       req.body.time,
       req.body.road,
-      req.body.amount
+      req.body.amount,
+      req.file ? req.file.filename : null,
+      req.body.time_image,
+      req.body.date_image,
     ];
-    con.query(sql,[values], async (err, result) => {
+    
+    con.query(sql, values, (err, result) => {
       if (err) {
-        return res.json({ Error: 'Error booking car' });
-      }     
-      return res.json({ Status: 'Success' });
+        console.error('Error creating car:', err);
+        return res.status(500).json({ error: 'Error creating car' });
+      }
+      return res.json({ status: 'Success' });
     });
-  };
+  });
+};
+
+
+
 
 exports.booking_users = (req, res) => {
   const id = req.params.id;
