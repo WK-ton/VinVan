@@ -12,7 +12,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:mysql1/mysql1.dart';
 
 class StepBooking extends StatefulWidget {
-  final List<String> selectedSeats;
+  final String selectedSeats;
   final String number;
   final String fromStation;
   final String toStation;
@@ -20,18 +20,24 @@ class StepBooking extends StatefulWidget {
   final String date;
   final String road;
   final String token;
+  final int selectedRow;
+  final int selectedCol;
+  final int totalCost;
 
-  StepBooking({
-    Key? key,
-    required this.selectedSeats,
-    required this.number,
-    required this.fromStation,
-    required this.toStation,
-    required this.time,
-    required this.date,
-    required this.road,
-    required this.token,
-  }) : super(key: key);
+  StepBooking(
+      {Key? key,
+      required this.selectedSeats,
+      required this.number,
+      required this.fromStation,
+      required this.toStation,
+      required this.time,
+      required this.date,
+      required this.road,
+      required this.token,
+      required this.selectedRow,
+      required this.selectedCol,
+      required this.totalCost})
+      : super(key: key);
 
   @override
   State<StepBooking> createState() => _StepBookingState();
@@ -51,7 +57,7 @@ class _StepBookingState extends State<StepBooking> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
-        'amount': widget.selectedSeats.length * 30.0,
+        'amount': widget.totalCost,
       }),
     );
 
@@ -83,6 +89,9 @@ class _StepBookingState extends State<StepBooking> {
             name: name,
             email: email,
             phone: phone,
+            selectedRow: widget.selectedRow,
+            selectedCol: widget.selectedCol,
+            totalCost: widget.totalCost,
           ),
           type: PageTransitionType.bottomToTop,
         ),
@@ -368,7 +377,7 @@ class _StepBookingState extends State<StepBooking> {
                               ),
                             ),
                             Text(
-                              '${widget.selectedSeats.join(' , ')}',
+                              '${widget.selectedSeats}',
                               style: GoogleFonts.notoSansThai(
                                 color: Color(0xFF1A1B1D),
                                 fontSize: 13,
@@ -403,7 +412,7 @@ class _StepBookingState extends State<StepBooking> {
                               ),
                             ),
                             Text(
-                              '${widget.selectedSeats.length * 30} บาท',
+                              '${widget.totalCost} บาท',
                               style: GoogleFonts.notoSansThai(
                                 color: Color(0xFF1A1B1D),
                                 fontSize: 13,

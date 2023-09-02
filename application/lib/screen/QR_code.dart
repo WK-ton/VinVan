@@ -13,7 +13,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 
 class QRCodePaymentScreen extends StatefulWidget {
   final String qrCodeData;
-  final List<String> selectedSeats;
+  final String selectedSeats;
   final String number;
   final String fromStation;
   final String toStation;
@@ -24,6 +24,9 @@ class QRCodePaymentScreen extends StatefulWidget {
   final String email;
   final String phone;
   final String token;
+  final int selectedRow;
+  final int selectedCol;
+  final int totalCost;
 
   const QRCodePaymentScreen(
       {required this.qrCodeData,
@@ -38,6 +41,9 @@ class QRCodePaymentScreen extends StatefulWidget {
       required this.name,
       required this.email,
       required this.phone,
+      required this.selectedRow,
+      required this.selectedCol,
+      required this.totalCost,
       Key? key})
       : super(key: key);
 
@@ -159,13 +165,13 @@ class _QRCodePaymentScreenState extends State<QRCodePaymentScreen> {
     var length = await _selectedImage!.length();
 
     var uri = Uri.parse('http://localhost:8081/booking/create/cars');
-    final double payment = widget.selectedSeats.length * 30.0;
+    final int payment = widget.totalCost;
     final request = http.MultipartRequest('POST', uri)
       ..headers['Content-Type'] = 'multipart/form-data'
       ..fields['fromstation'] = widget.fromStation
       ..fields['tostation'] = widget.toStation
       ..fields['number'] = widget.number
-      ..fields['seat'] = widget.selectedSeats.join(',')
+      // ..fields['seat'] = widget.selectedSeats
       ..fields['name'] = widget.name
       ..fields['email'] = widget.email
       ..fields['phone'] = widget.phone
@@ -175,6 +181,9 @@ class _QRCodePaymentScreenState extends State<QRCodePaymentScreen> {
       ..fields['amount'] = jsonEncode(payment)
       ..fields['time_image'] = timeString
       ..fields['date_image'] = _selectedDate!.toLocal().toString().split(' ')[0]
+      ..fields['row'] = widget.selectedRow.toString()
+      ..fields['col'] = widget.selectedCol.toString()
+      ..fields['seat'] = widget.selectedSeats
       ..files.add(http.MultipartFile(
         'image',
         stream,

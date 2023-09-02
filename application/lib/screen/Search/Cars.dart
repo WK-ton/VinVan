@@ -1,4 +1,5 @@
 import 'package:application/screen/Seat.dart';
+import 'package:application/screen/Test.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
@@ -196,14 +197,14 @@ class _CarsState extends State<Cars> {
                                   Navigator.push(
                                     context,
                                     PageTransition(
-                                        child: Seat(
-                                          number: number,
-                                          fromStation: fromstation,
-                                          toStation: tostation,
-                                          time: time,
-                                          road: road,
-                                          token: widget.token,
-                                        ),
+                                        child: SeatReservationScreen(
+                                            number: number,
+                                            fromStation: fromstation,
+                                            toStation: tostation,
+                                            time: time,
+                                            road: road,
+                                            token: widget.token,
+                                            ),
                                         type: PageTransitionType.rightToLeft),
                                   );
                                 },
