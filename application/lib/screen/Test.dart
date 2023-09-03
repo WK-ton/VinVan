@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SeatReservationScreen extends StatefulWidget {
   final String number;
@@ -167,110 +168,380 @@ class _SeatReservationScreenState extends State<SeatReservationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Seat Reservation'),
+        body: Stack(children: [
+      Container(
+        width: 390,
+        height: 843,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(color: Color(0xFFF2F4F8)),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Select your seats:',
-              style: TextStyle(fontSize: 20),
+      Container(
+        width: 390,
+        height: 300,
+        decoration: ShapeDecoration(
+          color: Color(0xFF5C24D4),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
             ),
-            SizedBox(height: 20),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                children: List.generate(
-                  seats.length,
-                  (row) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        seats[row].length,
-                        (col) {
-                          return GestureDetector(
-                            onTap: () {
-                              _toggleSeat(row, col);
-                            },
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: seats[row][col]
-                                    ? Colors.green
-                                    : reservedSeats[row][col]
-                                        ? Colors.red
-                                        : Colors.grey,
-                                border: Border.all(color: Colors.black),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  getSeatLabel(row, col),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
+          ),
+        ),
+      ),
+      Column(children: [
+        SizedBox(height: 50),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            IconButton(
               onPressed: () {
-                if (seats.isEmpty) {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('Error'),
-                        content: Text('Please select at least 1 seat.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                  return;
-                }
-                final totalCost = calculateTotalCost();
-                Navigator.push(
-                  context,
-                  PageTransition(
-                      child: StepBooking(
-                        number: widget.number,
-                        fromStation: widget.fromStation,
-                        toStation: widget.toStation,
-                        time: widget.time,
-                        date: getCurrentDate(),
-                        road: widget.road,
-                        selectedSeats: formatSelectedSeats(),
-                        token: widget.token,
-                        selectedRow: selectedRow,
-                        selectedCol: selectedCol,
-                        totalCost: totalCost, // Pass total cost here
-                      ),
-                      type: PageTransitionType.rightToLeft),
-                );
+                Navigator.pop(context);
               },
-              child: Text('Reserve Seats'),
+              icon: Icon(Icons.arrow_back),
             ),
           ],
         ),
-      ),
-    );
+        Container(
+          height: 80,
+          padding: EdgeInsets.symmetric(horizontal: 25),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "โปรดเลือกที่นั่ง",
+                style: GoogleFonts.notoSansThai(
+                    color: Colors.white,
+                    fontSize: 40,
+                    fontWeight: FontWeight.w400),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          width: 350,
+          height: 80,
+          decoration: ShapeDecoration(
+            color: Color(0xFF262626),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment
+                      .start, // จัดให้ Text สาย 999 อยู่ซ้ายสุด
+                  children: [
+                    Text(
+                      '${widget.fromStation} - ${widget.toStation}',
+                      style: GoogleFonts.notoSansThai(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'สาย : ${widget.number}',
+                      style: GoogleFonts.notoSansThai(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'วันที่ ${getCurrentDate()}',
+                      style: GoogleFonts.notoSansThai(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'เวลา : ${widget.time}',
+                      style: GoogleFonts.notoSansThai(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        const SizedBox(height: 45),
+        Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Row(
+                children: [
+                  Container(
+                    width: 20,
+                    height: 20,
+                    child: Image.asset(
+                      'assets/sold.png', // Replace 'your_image.png' with your actual image path
+                      fit: BoxFit.cover, // You can adjust the fit as needed
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    'ที่นั่งเต็ม',
+                    style: GoogleFonts.notoSansThai(),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 20,
+                    height: 20,
+                    child: Image.asset(
+                      'assets/selected.png', // Replace 'your_image.png' with your actual image path
+                      fit: BoxFit.cover, // You can adjust the fit as needed
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Text('กำลังเลือก', style: GoogleFonts.notoSansThai())
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  Container(
+                    width: 20,
+                    height: 20,
+                    child: Image.asset(
+                      'assets/unselected.png', // Replace 'your_image.png' with your actual image path
+                      fit: BoxFit.cover, // You can adjust the fit as needed
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    'ที่นั่งว่าง',
+                    style: GoogleFonts.notoSansThai(),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 50,
+            ),
+            SizedBox(
+              height: 50,
+            ),
+          ],
+        ),
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: 20),
+              Container(
+                width: 300,
+                padding: EdgeInsets.all(10),
+                // decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     borderRadius: BorderRadius.circular(10)),
+                child: Column(
+                  children: List.generate(
+                    seats.length,
+                    (row) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          seats[row].length,
+                          (col) {
+                            return GestureDetector(
+                              onTap: () {
+                                _toggleSeat(row, col);
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: seats[row][col]
+                                          ? AssetImage('assets/selected.png')
+                                          : reservedSeats[row][col]
+                                              ? AssetImage('assets/sold.png')
+                                              : AssetImage(
+                                                  'assets/unselected.png'),
+                                      fit: BoxFit
+                                          .cover, // You can adjust the fit as needed
+                                    ),
+                                    // Add any other styling you need, such as borders or borderRadius.
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      getSeatLabel(row, col),
+                                      style: GoogleFonts.notoSansThai(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 55),
+              Stack(
+                children: [
+                  Container(
+                    width: 390,
+                    height: 116,
+                    decoration: ShapeDecoration(
+                      color: Color(0xFF5C24D4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 170,
+                          height: 70,
+                          decoration: ShapeDecoration(
+                            color: Color(0xFF262626),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'เลือกที่นั่ง: ${formatSelectedSeats()}',
+                                  style: GoogleFonts.notoSansThai(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'รวมเงิน: ${calculateTotalCost()} บาท',
+                                  style: GoogleFonts.notoSansThai(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 140,
+                          height: 40,
+                          child: TextButton(
+                            onPressed: () {
+                              if (seats.isEmpty) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text('Error'),
+                                      content: Text(
+                                          'Please select at least 1 seat.'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                                return;
+                              }
+                              final totalCost = calculateTotalCost();
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: StepBooking(
+                                      number: widget.number,
+                                      fromStation: widget.fromStation,
+                                      toStation: widget.toStation,
+                                      time: widget.time,
+                                      date: getCurrentDate(),
+                                      road: widget.road,
+                                      selectedSeats: formatSelectedSeats(),
+                                      token: widget.token,
+                                      selectedRow: selectedRow,
+                                      selectedCol: selectedCol,
+                                      totalCost:
+                                          totalCost, // Pass total cost here
+                                    ),
+                                    type: PageTransitionType.rightToLeft),
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text(
+                              'Confirm',
+                              style: GoogleFonts.notoSans(
+                                color: Colors
+                                    .black, // You can customize the text color here
+                                fontSize:
+                                    16, // You can adjust the font size here
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        )
+      ])
+    ]));
   }
 }
