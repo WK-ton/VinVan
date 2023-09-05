@@ -49,7 +49,7 @@ class _BottomTabState extends State<BottomTab> {
                 text: 'Home',
               ),
               GButton(
-                icon: Icons.qr_code_2,
+                icon: Icons.airplane_ticket_sharp,
                 text: 'Ticket',
               ),
               // GButton(
@@ -80,7 +80,7 @@ class _BottomTabState extends State<BottomTab> {
         );
       // Replace with your booking screen widget
       case 1:
-        return const Ticket();
+        return Ticket(token: widget.token,);
       // case 2:
       //   return const Cars();
       case 2:

@@ -7,6 +7,7 @@ const router = express.Router();
 router.post('/sign-up', UserController.signUp);
 router.post('/Adminlogin', authController.login);
 router.post('/userLogin', UserController.userLogin);
-router.get('/getUser/:id', UserController.getUsers);
+router.get('/getUser', UserController.getUsers);
+router.delete('/delete/user/:id', UserController.deleteUser);
 router.get('/', UserController.getItem);
 module.exports = router;

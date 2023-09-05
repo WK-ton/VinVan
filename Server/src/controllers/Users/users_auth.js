@@ -138,9 +138,14 @@ exports.signUp = (req, res) => {
 };
 
 exports.getUsers = (req, res) => {
-  const id = req.params.id;
-  const sql = "SELECT name FROM User WHERE id = ?";
-  con.query(sql, [id], (err, result) => {
+  const value = [ 
+    req.params.id,
+    req.body.name,
+    req.body.email,
+    req.body.phone,
+  ]
+  const sql = "SELECT `id`,`name`,`email`,`phone` FROM User";
+  con.query(sql, [value], (err, result) => {
     if (err) {
       return res.json({ status: "Error", message: "Failed to retrieve user data" });
     }
@@ -148,10 +153,16 @@ exports.getUsers = (req, res) => {
     if (result.length === 0) {
       return res.json({ status: "Error", message: "User not found" });
     }
+    return res.json({ status: "Success", result });
+  });
+};
 
-    const name = result[0].name;
-
-    return res.json({ status: "Success", name: name, });
+exports.deleteUser = (req, res) => {
+  const id = req.params.id;
+  const sql = "DELETE FROM User WHERE id = ?";
+  con.query(sql, [id], (err, result) => {
+      if (err) return res.json({ Error: "Delete User Error in sql" });
+      return res.json({ Status: "Success" });
   });
 };
 
