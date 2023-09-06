@@ -10,6 +10,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 
 class SearchVan extends StatefulWidget {
   SearchVan({@required this.token, Key? key}) : super(key: key);
@@ -31,6 +33,8 @@ class _TestState extends State<SearchVan> {
   late String name;
   late String email;
   late String phone;
+
+  bool emailSent = false;
 
   @override
   void initState() {
@@ -55,24 +59,72 @@ class _TestState extends State<SearchVan> {
         return notification['name'] == name;
       }).toList();
 
-      if (newData.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'You have ${newData.length} new notifications.',
-              style: TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.redAccent,
-            duration: Duration(seconds: 3),
-          ),
-        );
-      }
-
       setState(() {
         data = newData;
       });
+      checkTimeForNotification();
     } else {
       throw Exception('Failed to load data');
+    }
+  }
+
+  bool showContainer = false;
+
+  void checkTimeForNotification() {
+    final currentTime = DateTime.now();
+
+    for (final car in data) {
+      final time = car['time'];
+      final timeParts = time.split(':');
+      final carTime = DateTime(currentTime.year, currentTime.month,
+          currentTime.day, int.parse(timeParts[0]), int.parse(timeParts[1]));
+
+      final notificationTime = carTime.subtract(Duration(minutes: 30));
+
+      if (currentTime.isBefore(carTime) &&
+          currentTime.isAfter(notificationTime)) {
+        showContainer = true;
+        if (!emailSent) {
+          sendEmail();
+          emailSent = true;
+        }
+        break;
+      }
+    }
+  }
+
+  bool isNotificationTime(String time) {
+    final currentTime = DateTime.now();
+    final timeParts = time.split(':');
+    final carTime = DateTime(currentTime.year, currentTime.month,
+        currentTime.day, int.parse(timeParts[0]), int.parse(timeParts[1]));
+
+    final notificationTime = carTime.subtract(Duration(minutes: 30));
+
+    return currentTime.isBefore(carTime) &&
+        currentTime.isAfter(notificationTime);
+  }
+
+  void sendEmail() async {
+    String username = 'tonzaza181@gmail.com';
+    String password = 'wbrgetarxpgdjrvv';
+
+    final smtpServer = gmail(username, password);
+
+    final message = Message()
+      ..from = Address(username, 'รอบรถของคุณกำลังจะมาถึงอีก 15 นาที')
+      ..recipients.add(email)
+      ..subject = 'เตรียมตัวให้พร้อมน้าา ☺️'
+      ..text = 'เตรียมตัวสำหรับการเดินทางของคุณ';
+
+    try {
+      final sendReport = await send(message, smtpServer);
+      print('Message sent: ' + sendReport.toString());
+    } on MailerException catch (e) {
+      print('Message not sent.');
+      for (var p in e.problems) {
+        print('Problem: ${p.code}: ${p.msg}');
+      }
     }
   }
 
@@ -89,7 +141,7 @@ class _TestState extends State<SearchVan> {
             Container(
               height: double.infinity,
               margin: EdgeInsets.only(top: size.height * 0.25),
-              color: Colors.white,
+              color: Color(0xFFF2F4F8),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -334,6 +386,291 @@ class _TestState extends State<SearchVan> {
                         )
                       ],
                     ),
+                  ),
+
+                  const Divider(height: 20),
+                  if (showContainer)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(220, 0, 0, 0),
+                      child: Text(
+                        'ใกล้ถึงกำหนด 🕐',
+                        style: GoogleFonts.notoSansThai(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.red[400]),
+                      ),
+                    ),
+
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        final car = data[index];
+                        final time = car['time'];
+                        final formattedTime = time.substring(0, 5);
+
+                        // ตรวจสอบเงื่อนไขเวลาและแสดงข้อมูลเฉพาะเวลาที่ตรง
+                        if (isNotificationTime(time)) {
+                          final fromstation = car['fromstation'];
+                          final tostation = car['tostation'];
+                          final number = car['number'];
+                          final date = car['date'];
+                          final seat = car['seat'];
+                          final id = car['id'];
+
+                          return Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                            child: Container(
+                              width: 330,
+                              height: 191,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Colors.indigo.withAlpha(50),
+                                ),
+                              ),
+                              child: InkWell(
+                                onTap: () {},
+                                child: Stack(children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Row(
+                                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'ID : $id',
+                                          style: GoogleFonts.notoSansThai(
+                                            color: Colors.grey,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 20,
+                                    left: 273,
+                                    child: Text(
+                                      'สาย: $number',
+                                      style: GoogleFonts.notoSansThai(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 20,
+                                    top: 50,
+                                    child: Text(
+                                      'จาก',
+                                      style: GoogleFonts.notoSansThai(
+                                        color: Color(0xFF9B9999),
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 20,
+                                    top: 66,
+                                    child: Text(
+                                      fromstation,
+                                      style: GoogleFonts.notoSansThai(
+                                        color: Color(0xFF2D3D50),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 20,
+                                    top: 100,
+                                    child: Text(
+                                      'ถึง',
+                                      style: GoogleFonts.notoSansThai(
+                                        color: Color(0xFF9B9999),
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 20,
+                                    top: 116,
+                                    child: Text(
+                                      tostation,
+                                      style: GoogleFonts.notoSansThai(
+                                        color: Color(0xFF2D3D50),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 50,
+                                    left: 250,
+                                    child: Transform(
+                                      transform: Matrix4.identity()
+                                        ..translate(0.0, 0.0)
+                                        ..rotateZ(1.56),
+                                      child: Container(
+                                        width: 90.01,
+                                        decoration: ShapeDecoration(
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                              width: 0.50,
+                                              strokeAlign:
+                                                  BorderSide.strokeAlignCenter,
+                                              color: Color(0xFFC9C8C8),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 285,
+                                    top: 50,
+                                    child: Text(
+                                      'รอบเวลา',
+                                      style: GoogleFonts.notoSansThai(
+                                        color: Color(0xFF9B9999),
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 283,
+                                    top: 66,
+                                    child: Text(
+                                      '$formattedTime',
+                                      style: GoogleFonts.notoSansThai(
+                                        color: Color(0xFF2D3D50),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 300,
+                                    top: 100,
+                                    child: Text(
+                                      'วันที่',
+                                      style: GoogleFonts.notoSansThai(
+                                        color: Color(0xFF9B9999),
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 260,
+                                    top: 116,
+                                    child: Text(
+                                      '$date',
+                                      style: GoogleFonts.notoSansThai(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+
+                                  Positioned(
+                                    top: 155,
+                                    left: 20,
+                                    child: Container(
+                                      width: 289,
+                                      decoration: ShapeDecoration(
+                                        shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                            width: 0.50,
+                                            strokeAlign:
+                                                BorderSide.strokeAlignCenter,
+                                            color: Color(0xFFC9C8C8),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 165,
+                                    left: 20,
+                                    child: Text(
+                                      'ที่นั่ง: $seat',
+                                      style: GoogleFonts.notoSansThai(
+                                        color: Color(0xFF2D3D50),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 163,
+                                    left: 240,
+                                    child: Container(
+                                      width: 90,
+                                      height: 20,
+                                      decoration: ShapeDecoration(
+                                        color:
+                                            Color.fromARGB(255, 253, 166, 166),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'Ticket Coming',
+                                          style: GoogleFonts.notoSansThai(
+                                            color: Color(0xFF4C2CA4),
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  // Positioned(
+                                  //   top: 153,
+                                  //   left: 75,
+                                  //   child: TextButton(
+                                  //       onPressed: () {},
+                                  //       child: Text(
+                                  //         'กดเพื่อดูเพิ่มเติม',
+                                  //         style: GoogleFonts.notoSansThai(
+                                  //           color: Color(0xFF5C24D4),
+                                  //           fontSize: 10,
+                                  //           fontWeight: FontWeight.w400,
+                                  //         ),
+                                  //       )),
+                                  // ),
+                                  // Positioned(
+                                  //   top: 167,
+                                  //   left: 259,
+                                  //   child: Text(
+                                  //     'Buy Ticket',
+                                  //     style: GoogleFonts.notoSansThai(
+                                  //       color: Colors.indigo,
+                                  //       fontSize: 12,
+                                  //       fontWeight: FontWeight.w400,
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                ]),
+                              ),
+                            ),
+                          );
+                        }
+
+                        // ถ้าเงื่อนไขเวลาไม่ตรงกันให้ส่ง Container ว่างเพื่อไม่แสดงข้อมูลนี้
+                        return Container();
+                      },
+                    ),
                   )
                 ],
               ),
@@ -368,7 +705,7 @@ class NotificationModal extends StatelessWidget {
             // final name = notification['name'];
             final tostation = notification['tostation'];
             return ListTile(
-              title: Text('${index + 1}. ตั๋วของคุณยืนยันแล้ว ',
+              title: Text('ตั๋วของคุณยืนยันแล้ว ',
                   style: GoogleFonts.notoSansThai(
                       fontSize: 18,
                       fontWeight: FontWeight.w400,

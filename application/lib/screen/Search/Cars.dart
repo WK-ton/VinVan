@@ -180,6 +180,8 @@ class _CarsState extends State<Cars> {
                           final number = car['number'];
                           final road = car['road'];
                           final time = car['time'];
+                          final formattedTime = time.substring(0, 5);
+
                           return Padding(
                             padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
                             child: Container(
@@ -198,13 +200,13 @@ class _CarsState extends State<Cars> {
                                     context,
                                     PageTransition(
                                         child: SeatReservationScreen(
-                                            number: number,
-                                            fromStation: fromstation,
-                                            toStation: tostation,
-                                            time: time,
-                                            road: road,
-                                            token: widget.token,
-                                            ),
+                                          number: number,
+                                          fromStation: fromstation,
+                                          toStation: tostation,
+                                          time: time,
+                                          road: road,
+                                          token: widget.token,
+                                        ),
                                         type: PageTransitionType.rightToLeft),
                                   );
                                 },
@@ -336,7 +338,7 @@ class _CarsState extends State<Cars> {
                                     left: 267,
                                     top: 66,
                                     child: Text(
-                                      '$time',
+                                      '$formattedTime',
                                       style: GoogleFonts.notoSansThai(
                                         color: Color(0xFF2D3D50),
                                         fontSize: 14,

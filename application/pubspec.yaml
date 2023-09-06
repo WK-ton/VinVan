@@ -61,6 +61,7 @@ dependencies:
   quickalert: ^1.0.2
   cool_alert: ^2.0.1
   awesome_dialog: ^3.1.0
+  mailer: ^6.0.1
 
 dev_dependencies:
   flutter_test:

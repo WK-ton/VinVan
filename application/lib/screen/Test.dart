@@ -89,7 +89,7 @@ class _SeatReservationScreenState extends State<SeatReservationScreen> {
 
   String getCurrentDate() {
     final now = DateTime.now();
-    final formatter = DateFormat('dd/MM/yy');
+    final formatter = DateFormat('yyyy/MM/dd');
     return formatter.format(now);
   }
 
@@ -272,7 +272,7 @@ class _SeatReservationScreenState extends State<SeatReservationScreen> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      'เวลา : ${widget.time}',
+                      'เวลา : ${widget.time.substring(0, 5)}',
                       style: GoogleFonts.notoSansThai(
                         color: Colors.white,
                         fontSize: 12,

@@ -24,6 +24,42 @@ class _TimeSelectState extends State<TimeSelect> {
     fetchCarSatTai();
   }
 
+  void checkAndReserveTime(String selectedTime) {
+    final currentTime = DateTime.now();
+    final selectedDateTime = DateTime(
+      currentTime.year,
+      currentTime.month,
+      currentTime.day,
+      int.parse(selectedTime.split(':')[0]),
+      int.parse(selectedTime.split(':')[1]),
+      int.parse(selectedTime.split(':')[2]),
+    );
+
+    if (selectedDateTime.isBefore(currentTime)) {
+      // เวลาที่เลือกเกินเวลาปัจจุบัน
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('เวลาไม่ถูกต้อง'),
+            content: Text('ไม่สามารถจองเวลาที่เกินเวลาจริงได้'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('ปิด'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // เวลาถูกต้อง
+      // ให้ทำบางสิ่งที่คุณต้องการที่นี่
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,6 +109,7 @@ class _TimeSelectState extends State<TimeSelect> {
                   itemBuilder: (context, index) {
                     final car = cars[index];
                     final time = car['time'];
+                    final formattedTime = time.substring(0, 5);
                     return Container(
                       margin: EdgeInsets.symmetric(vertical: 15.0),
                       child: Column(
@@ -81,10 +118,11 @@ class _TimeSelectState extends State<TimeSelect> {
                             children: [
                               TextButton(
                                 onPressed: () {
+                                  // checkAndReserveTime(time);
                                   Navigator.pop(context, time);
                                 },
                                 child: Text(
-                                  'เวลา: $time',
+                                  'เวลา: $formattedTime',
                                   style: GoogleFonts.notoSansThai(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 16,
@@ -106,38 +144,6 @@ class _TimeSelectState extends State<TimeSelect> {
     );
   }
 
-  // void fetchCarBangKhen() async {
-  //   const url = 'http://localhost:8081/carBangkhen/getCars/cars_bangkhen';
-  //   final uri = Uri.parse(url);
-  //   final response = await http.get(uri);
-  //   final body = response.body;
-  //   final json = jsonDecode(body);
-  //   setState(() {
-  //     cars = json['Result'];
-  //   });
-  // }
-
-  // void fetchCarMonument() async {
-  //   const url = 'http://localhost:8081/carMonument/getCars/cars_monument';
-  //   final uri = Uri.parse(url);
-  //   final response = await http.get(uri);
-  //   final body = response.body;
-  //   final json = jsonDecode(body);
-  //   setState(() {
-  //     cars.addAll(json['Result']);
-  //   });
-  // }
-
-  // void fetchCarSatTai() async {
-  //   const url = 'http://localhost:8081/carSaiTai/getCars/cars_SatTai';
-  //   final uri = Uri.parse(url);
-  //   final response = await http.get(uri);
-  //   final body = response.body;
-  //   final json = jsonDecode(body);
-  //   setState(() {
-  //     cars.addAll(json['Result']);
-  //   });
-  // }
   void fetchCarBangKhen() async {
     const url = 'http://localhost:8081/carBangkhen/getCars/cars_bangkhen';
     final uri = Uri.parse(url);

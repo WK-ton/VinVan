@@ -309,7 +309,7 @@ class _StepBookingState extends State<StepBooking> {
                       top: 110,
                       left: 270,
                       child: Text(
-                        'เวลา : ${widget.time}',
+                        'เวลา : ${widget.time.substring(0, 5)}',
                         style: GoogleFonts.notoSansThai(
                             color: Color(0xFF1A1B1D),
                             fontSize: 13,
