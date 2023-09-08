@@ -1,3 +1,4 @@
+import 'package:application/components/Dash.dart';
 import 'package:application/screen/Seat.dart';
 import 'package:application/screen/Test.dart';
 import 'package:flutter/material.dart';
@@ -385,18 +386,11 @@ class _CarsState extends State<Cars> {
                                   Positioned(
                                     top: 160,
                                     left: 20,
-                                    child: Container(
-                                      width: 289,
-                                      decoration: ShapeDecoration(
-                                        shape: RoundedRectangleBorder(
-                                          side: BorderSide(
-                                            width: 0.50,
-                                            strokeAlign:
-                                                BorderSide.strokeAlignCenter,
-                                            color: Color(0xFF9B9A9A),
-                                          ),
-                                        ),
-                                      ),
+                                    child: CustomPaint(
+                                      size: Size(270,
+                                          1), // Adjust the width and height of the dashed line
+                                      painter:
+                                          DashedLinePainter(), // Create a custom Painter for the dashed line
                                     ),
                                   ),
                                   Positioned(

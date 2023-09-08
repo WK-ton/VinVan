@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class SeatReservationScreen extends StatefulWidget {
   final String number;
@@ -88,8 +89,11 @@ class _SeatReservationScreenState extends State<SeatReservationScreen> {
   }
 
   String getCurrentDate() {
-    final now = DateTime.now();
-    final formatter = DateFormat('yyyy/MM/dd');
+    initializeDateFormatting('th_TH', null);
+    final now = DateTime.now()
+        .toUtc()
+        .add(const Duration(hours: 7)); // เพิ่ม 7 ชั่วโมงเพื่อให้เป็น GMT+7
+    final formatter = DateFormat('yyyy/MM/dd', 'th_TH');
     return formatter.format(now);
   }
 
@@ -110,8 +114,7 @@ class _SeatReservationScreenState extends State<SeatReservationScreen> {
   int selectedCol = -1;
 
   Future<void> fetchReservedSeats() async {
-    final url = Uri.parse(
-        'http://localhost:8081/booking/api/getSeats'); // แก้ไข URL ตาม URL ของ API ของคุณ
+    final url = Uri.parse('http://localhost:8081/booking/api/getSeats');
 
     try {
       final response = await http.get(url);

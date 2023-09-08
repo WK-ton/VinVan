@@ -2,6 +2,7 @@ const con = require("../../config/Database");
 const QRCode = require("qrcode");
 const generatePayload = require("promptpay-qr");
 const _ = require("lodash");
+const moment = require('moment-timezone');
 
 exports.booking_cars = (req, res) => {
   const checksql =
@@ -80,7 +81,7 @@ exports.booking_users = (req, res) => {
     req.body.name,
     req.body.email,
     req.body.phone,
-    req.body.date,
+    moment.tz(req.body.date, 'Asia/Bangkok').add(7, 'hours').format('YYYY/MM/DD HH:mm:ss'),
     req.body.time,
     req.body.road ,
     req.body.amount,
@@ -104,10 +105,16 @@ exports.booking_users = (req, res) => {
     if (result.length === 0) {
       return res.json({ status: "Error", message: "User not found" });
     }
+    const resultWithGmp7Date = result.map((row) => ({
+      ...row,
+      date: moment.tz(row.date, 'Asia/Bangkok').format('YYYY/MM/DD'),
+    }));
 
-    return res.json({ status: "Success", data: result });
+    return res.json({ status: "Success", data: resultWithGmp7Date });
   });
 };
+
+
 
 exports.showBooking = (req, res) => {
   const values = [
@@ -118,7 +125,7 @@ exports.showBooking = (req, res) => {
     req.body.name,
     req.body.email,
     req.body.phone,
-    req.body.date,
+    moment.tz(req.body.date, 'Asia/Bangkok').add(7, 'hours').format('YYYY/MM/DD HH:mm:ss'), // แปลงรูปแบบวันที่และเพิ่ม 7 ชั่วโมงใน TimeZone 'Asia/Bangkok'
     req.body.time,
     req.body.road,
     req.body.amount,
@@ -135,7 +142,7 @@ exports.showBooking = (req, res) => {
 
   con.query(sql, [values], (err, result) => {
     if (err) {
-      return res.json({
+      return res.status(500).json({
         status: 'Error',
         message: 'Failed to retrieve user data',
       });
@@ -145,9 +152,19 @@ exports.showBooking = (req, res) => {
       return res.json({ status: 'Error', message: 'User not found' });
     }
 
-    return res.json({ status: 'Success', data: result });
+    // แปลงวันที่ให้อยู่ใน TimeZone GMP+7 และเปลี่ยนรูปแบบวันที่
+    const resultWithGmp7Date = result.map((row) => ({
+      ...row,
+      date: moment.tz(row.date, 'Asia/Bangkok').format('YYYY/MM/DD'),
+    }));
+
+    return res.json({ status: 'Success', data: resultWithGmp7Date });
   });
 };
+
+
+
+
 
 
 exports.qrCode = (req, res) => {
@@ -178,8 +195,10 @@ exports.qrCode = (req, res) => {
   });
 };
 
+
+
 exports.getseats = (req, res) => {  
-  const query = 'SELECT fromstation, tostation, time , date, row, col FROM booking';
+  const query = 'SELECT fromstation, tostation, time, date, row, col FROM booking';
   con.query(query, (err, results) => {
     if (err) {
       console.error('เกิดข้อผิดพลาดในการดึงข้อมูล: ' + err);
@@ -188,11 +207,14 @@ exports.getseats = (req, res) => {
     }
     
     const reservedSeats = results.map((row) => {
+      // แปลงวันที่ให้อยู่ใน TimeZone GMT+7
+      const dateInGMT7 = moment.tz(row.date, 'Asia/Bangkok').format('YYYY/MM/DD');
+      
       return {
         fromstation: row.fromstation,
         tostation: row.tostation,
-        time: row.time,
-        date: row.date,
+        time: row.time, // เวลาจาก row.time แบบเดิม
+        date: dateInGMT7, // รูปแบบวันที่
         row: row.row,
         col: row.col,
       };
@@ -201,6 +223,8 @@ exports.getseats = (req, res) => {
     res.json(reservedSeats);
   });
 }
+
+
 
 exports.deleteBooking = (req, res) => {
   const id = req.params.id;

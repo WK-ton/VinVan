@@ -252,7 +252,7 @@ class _StepBookingState extends State<StepBooking> {
                     ),
                     Positioned(
                       top: 50,
-                      left: 258,
+                      left: 243,
                       child: Text(
                         'วันที่ ${widget.date}',
                         style: GoogleFonts.notoSansThai(

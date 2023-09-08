@@ -1,3 +1,5 @@
+import 'package:application/components/Dash.dart';
+import 'package:application/components/Ticket.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -56,20 +58,50 @@ class _TicketState extends State<Ticket> {
 
   @override
   Widget build(BuildContext context) {
-    data.sort((a, b) =>
-        DateTime.parse(b['date']).compareTo(DateTime.parse(a['date'])));
+    // data.sort((a, b) {
+    //   final apiDateA = DateFormat('yyyy/MM/dd').parse(a['date']);
+    //   final apiDateB = DateFormat('yyyy/MM/dd').parse(b['date']);
+    //   final currentDate = DateTime.now();
+
+    //   if (DateFormat('yyyy/MM/dd').format(apiDateA) ==
+    //       DateFormat('yyyy/MM/dd').format(currentDate)) {
+    //     return -1;
+    //   } else if (DateFormat('yyyy/MM/dd').format(apiDateB) ==
+    //       DateFormat('yyyy/MM/dd').format(currentDate)) {
+    //     return 1;
+    //   } else {
+    //     return apiDateA.compareTo(apiDateB);
+    //   }
+    // });
+
+    data.sort((a, b) {
+      final idA = a['id'] as int;
+      final idB = b['id'] as int;
+      return idB.compareTo(idA);
+    });
     return Scaffold(
       appBar: AppBar(
         leading: const Icon(Icons.qr_code_2),
         backgroundColor: const Color.fromARGB(255, 92, 36, 212),
-        titleTextStyle: const TextStyle(color: Colors.white, fontSize: 18),
+        titleTextStyle:
+            GoogleFonts.notoSansThai(color: Colors.white, fontSize: 18),
         title: const Text('Ticket'),
         shadowColor: Colors.black,
       ),
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+            padding: const EdgeInsets.fromLTRB(330, 20, 0, 0),
+            child: Text(
+              'ตั๋วล่าสุด',
+              style: GoogleFonts.notoSansThai(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.grey),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
             child: ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
@@ -84,58 +116,198 @@ class _TicketState extends State<Ticket> {
                 final formattedTime = time.substring(0, 5);
                 final id = car['id'];
                 final date = car['date'];
+                final seat = car['seat'];
+                final road = car['road'];
+                final name = car['name'];
+                final phone = car['phone'];
+
+                final apiDate = DateFormat('yyyy/MM/dd').parse(date);
 
                 final currentDate = DateTime.now();
-                // วันที่ในฐานข้อมูล (ให้แปลงจาก String ให้เป็น DateTime ก่อน)
-                final databaseDate = DateTime.parse(date);
 
-                // เช็คว่าวันที่ในฐานข้อมูลไม่ตรงกับวันที่ปัจจุบัน
-                final isDifferentDate = currentDate.isAfter(databaseDate);
+                final isDifferentDate = !DateFormat('yyyy/MM/dd')
+                    .format(apiDate)
+                    .startsWith(DateFormat('yyyy/MM/dd').format(currentDate));
 
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: isDifferentDate ? Colors.grey[300] : Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: Colors.indigo.withAlpha(50),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Stack(
-                        children: [
-                          Text(
-                            'ID : $id',
-                            style: GoogleFonts.notoSansThai(color: Colors.grey),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                            child: Text(
-                              '$fromstation - $tostation',
-                              style:
-                                  GoogleFonts.notoSansThai(color: Colors.black),
+                  child: InkWell(
+                    onTap: () {
+                      if (!isDifferentDate) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return TicketModal(
+                              id: id,
+                              number: number,
+                              fromstation: fromstation,
+                              tostation: tostation,
+                              date: date,
+                              time: formattedTime,
+                              seat: seat,
+                              road: road,
+                              name: name,
+                              phone: phone,
+                              email: email,
+                            );
+                          },
+                        );
+                      }
+                    },
+                    child: Container(
+                      width: 350,
+                      height: 185,
+                      decoration: BoxDecoration(
+                          color:
+                              isDifferentDate ? Colors.grey[300] : Colors.white,
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(
+                            color: Colors.indigo.withAlpha(50),
+                            width: 1,
+                          )),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              left: 8,
+                              child: Text(
+                                'ID : $id',
+                                style: GoogleFonts.notoSansThai(
+                                    fontSize: 12, color: Colors.grey),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                            child: Text(
-                              '$formattedTime',
-                              style: GoogleFonts.notoSansThai(
-                                  color: Colors.black54),
+                            Positioned(
+                              top: 45,
+                              left: 9,
+                              child: Text(
+                                '$fromstation',
+                                style: GoogleFonts.notoSansThai(
+                                    color: Colors.black),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(270, 50, 0, 0),
-                            child: Text(
-                              '$date',
-                              style: GoogleFonts.notoSansThai(
-                                  color: Colors.black54),
+                            Positioned(
+                              top: 45,
+                              left: 213,
+                              child: Text(
+                                '$tostation',
+                                style: GoogleFonts.notoSansThai(
+                                    color: Colors.black),
+                              ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              top: 30,
+                              left: 148,
+                              child: Text(
+                                'เวลา $formattedTime',
+                                style: GoogleFonts.notoSansThai(
+                                    fontSize: 10, color: Colors.black54),
+                              ),
+                            ),
+                            Positioned(
+                              top: 10,
+                              left: 136,
+                              child: Text(
+                                'วันที่ $date',
+                                style: GoogleFonts.notoSansThai(
+                                    fontSize: 10, color: Colors.black54),
+                              ),
+                            ),
+                            Positioned(
+                              top: 90,
+                              left: 40,
+                              child: CustomPaint(
+                                size: Size(270,
+                                    1), // Adjust the width and height of the dashed line
+                                painter:
+                                    DashedLinePainter(), // Create a custom Painter for the dashed line
+                              ),
+                            ),
+                            Positioned(
+                              top: 85,
+                              left: 25,
+                              child: Container(
+                                width: 10,
+                                height: 10,
+                                decoration: ShapeDecoration(
+                                  color: Color(0xFFFAFAFA),
+                                  shape: OvalBorder(
+                                    side: BorderSide(
+                                        width: 0.15, color: Color(0xFFBDBABA)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 85,
+                              left: 315,
+                              child: Container(
+                                width: 10,
+                                height: 10,
+                                decoration: ShapeDecoration(
+                                  color: Color(0xFF4C2CA4),
+                                  shape: OvalBorder(
+                                    side: BorderSide(
+                                        width: 0.15, color: Color(0xFFBDBABA)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 120,
+                              child: Container(
+                                width: 350,
+                                decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                      width: 0.25,
+                                      strokeAlign: BorderSide.strokeAlignCenter,
+                                      color: Color(0xFFBBBBBB),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 123,
+                              left: 19,
+                              child: Text(
+                                '$name',
+                                style: GoogleFonts.notoSansThai(
+                                  color: Color(0xFF2D3D50),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 140,
+                              left: 19,
+                              child: Text(
+                                'ที่นั่ง : $seat',
+                                style: GoogleFonts.notoSansThai(
+                                  color: Color(0xFF9B9999),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                                top: 65,
+                                left: 165,
+                                child: Icon(
+                                  Icons.business_center_rounded,
+                                  color: Colors.grey,
+                                )),
+                            Positioned(
+                                top: 135,
+                                left: 309,
+                                child: Icon(
+                                  Icons.arrow_circle_right_outlined,
+                                  color: Colors.indigoAccent,
+                                ))
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -36,7 +36,7 @@ class _FromCarState extends State<FromCar> {
                     child: Text(
                       'ปิด',
                       style: GoogleFonts.notoSansThai(
-                          fontWeight: FontWeight.w500, color: Colors.black),
+                          fontWeight: FontWeight.w500, color: Colors.grey),
                     ),
                   ),
                   Padding(

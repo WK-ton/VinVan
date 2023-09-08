@@ -1,9 +1,12 @@
+import 'package:application/components/Notification.dart';
 import 'package:application/components/custom_icon.dart';
+import 'package:application/screen/Notification.dart';
 import 'package:application/screen/Search/Cars.dart';
 import 'package:application/screen/Search/FromCar.dart';
 import 'package:application/screen/Search/Time.dart';
 import 'package:application/screen/Search/ToCar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -76,10 +79,11 @@ class _TestState extends State<SearchVan> {
     for (final car in data) {
       final time = car['time'];
       final timeParts = time.split(':');
+
       final carTime = DateTime(currentTime.year, currentTime.month,
           currentTime.day, int.parse(timeParts[0]), int.parse(timeParts[1]));
 
-      final notificationTime = carTime.subtract(Duration(minutes: 30));
+      final notificationTime = carTime.subtract(Duration(minutes: 15));
 
       if (currentTime.isBefore(carTime) &&
           currentTime.isAfter(notificationTime)) {
@@ -93,16 +97,22 @@ class _TestState extends State<SearchVan> {
     }
   }
 
-  bool isNotificationTime(String time) {
+  bool isNotificationTime(String time, String date) {
     final currentTime = DateTime.now();
     final timeParts = time.split(':');
     final carTime = DateTime(currentTime.year, currentTime.month,
         currentTime.day, int.parse(timeParts[0]), int.parse(timeParts[1]));
 
-    final notificationTime = carTime.subtract(Duration(minutes: 30));
+    final notificationTime = carTime.subtract(Duration(minutes: 15));
 
     return currentTime.isBefore(carTime) &&
         currentTime.isAfter(notificationTime);
+  }
+
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 
   void sendEmail() async {
@@ -112,9 +122,9 @@ class _TestState extends State<SearchVan> {
     final smtpServer = gmail(username, password);
 
     final message = Message()
-      ..from = Address(username, 'รอบรถของคุณกำลังจะมาถึงอีก 15 นาที')
+      ..from = Address(username, 'VINVAN')
       ..recipients.add(email)
-      ..subject = 'เตรียมตัวให้พร้อมน้าา ☺️'
+      ..subject = 'รถตู้จะออกในอีก 15 นาที'
       ..text = 'เตรียมตัวสำหรับการเดินทางของคุณ';
 
     try {
@@ -190,27 +200,36 @@ class _TestState extends State<SearchVan> {
                                         ),
                                       ],
                                     ),
-                                    onPressed: () async {
-                                      // if (data.isNotEmpty) {
-                                      //   // Show the SnackBar with the notification count
-                                      //   ScaffoldMessenger.of(context)
-                                      //       .showSnackBar(
-                                      //     SnackBar(
-                                      //       content: Text(
-                                      //           'You have ${data.length} notifications.'),
-                                      //       duration: Duration(
-                                      //           seconds:
-                                      //               3), // Adjust the duration as needed
-                                      //     ),
-                                      //   );
-                                      // }
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return NotificationModal(
-                                            data: data,
-                                          );
-                                        },
+                                    // onPressed: () async {
+                                    //   // if (data.isNotEmpty) {
+                                    //   //   // Show the SnackBar with the notification count
+                                    //   //   ScaffoldMessenger.of(context)
+                                    //   //       .showSnackBar(
+                                    //   //     SnackBar(
+                                    //   //       content: Text(
+                                    //   //           'You have ${data.length} notifications.'),
+                                    //   //       duration: Duration(
+                                    //   //           seconds:
+                                    //   //               3), // Adjust the duration as needed
+                                    //   //     ),
+                                    //   //   );
+                                    //   // }
+                                    //   showDialog(
+                                    //     context: context,
+                                    //     builder: (BuildContext context) {
+                                    //       return NotificationModal(
+                                    //         data: data,
+                                    //       );
+                                    //     },
+                                    //   );
+                                    // },
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        PageTransition(
+                                            child: NotificationPage(data: data),
+                                            type:
+                                                PageTransitionType.bottomToTop),
                                       );
                                     },
                                   ),
@@ -400,21 +419,24 @@ class _TestState extends State<SearchVan> {
                             color: Colors.red[400]),
                       ),
                     ),
-
                   Expanded(
                     child: ListView.builder(
                       itemCount: data.length,
                       itemBuilder: (context, index) {
                         final car = data[index];
                         final time = car['time'];
+                        final date = car['date'];
                         final formattedTime = time.substring(0, 5);
+                        final dateFormatter = DateFormat('yyyy/MM/dd');
+                        final dateStr = date; // เปลี่ยนเป็นรูปแบบวันที่ของคุณ
+                        final formatterdate = dateFormatter.parse(dateStr);
 
                         // ตรวจสอบเงื่อนไขเวลาและแสดงข้อมูลเฉพาะเวลาที่ตรง
-                        if (isNotificationTime(time)) {
+                        if (isNotificationTime(time, date) &&
+                            isSameDay(DateTime.now(), formatterdate)) {
                           final fromstation = car['fromstation'];
                           final tostation = car['tostation'];
                           final number = car['number'];
-                          final date = car['date'];
                           final seat = car['seat'];
                           final id = car['id'];
 
@@ -569,12 +591,12 @@ class _TestState extends State<SearchVan> {
                                   ),
                                   Positioned(
                                     left: 260,
-                                    top: 116,
+                                    top: 120,
                                     child: Text(
                                       '$date',
                                       style: GoogleFonts.notoSansThai(
                                         color: Colors.black,
-                                        fontSize: 14,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
@@ -682,51 +704,51 @@ class _TestState extends State<SearchVan> {
   }
 }
 
-class NotificationModal extends StatelessWidget {
-  final List<dynamic> data;
+// class NotificationModal extends StatelessWidget {
+//   final List<dynamic> data;
 
-  NotificationModal({required this.data});
+//   NotificationModal({required this.data});
 
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text('Notifications'),
-      content: Container(
-        decoration: BoxDecoration(
-          borderRadius:
-              BorderRadius.circular(10.0), // Adjust the border radius as needed
-          color: Colors.white,
-        ),
-        width: double.maxFinite,
-        child: ListView.builder(
-          itemCount: data.length,
-          itemBuilder: (context, index) {
-            final notification = data[index];
-            // final name = notification['name'];
-            final tostation = notification['tostation'];
-            return ListTile(
-              title: Text('ตั๋วของคุณยืนยันแล้ว ',
-                  style: GoogleFonts.notoSansThai(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.green[400])),
-              subtitle: Text(
-                '$tostation ',
-                style:
-                    GoogleFonts.notoSansThai(fontSize: 13, color: Colors.grey),
-              ),
-            );
-          },
-        ),
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text('Close'),
-        ),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return AlertDialog(
+//       title: Text('Notifications'),
+//       content: Container(
+//         decoration: BoxDecoration(
+//           borderRadius:
+//               BorderRadius.circular(10.0), // Adjust the border radius as needed
+//           color: Colors.white,
+//         ),
+//         width: double.maxFinite,
+//         child: ListView.builder(
+//           itemCount: data.length,
+//           itemBuilder: (context, index) {
+//             final notification = data[index];
+//             // final name = notification['name'];
+//             final tostation = notification['tostation'];
+//             return ListTile(
+//               title: Text('ตั๋วของคุณยืนยันแล้ว ',
+//                   style: GoogleFonts.notoSansThai(
+//                       fontSize: 18,
+//                       fontWeight: FontWeight.w400,
+//                       color: Colors.green[400])),
+//               subtitle: Text(
+//                 '$tostation ',
+//                 style:
+//                     GoogleFonts.notoSansThai(fontSize: 13, color: Colors.grey),
+//               ),
+//             );
+//           },
+//         ),
+//       ),
+//       actions: <Widget>[
+//         TextButton(
+//           onPressed: () {
+//             Navigator.of(context).pop();
+//           },
+//           child: Text('Close'),
+//         ),
+//       ],
+//     );
+//   }
+// }

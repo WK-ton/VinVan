@@ -35,8 +35,9 @@ class _TimeSelectState extends State<TimeSelect> {
       int.parse(selectedTime.split(':')[2]),
     );
 
-    if (selectedDateTime.isBefore(currentTime)) {
-      // เวลาที่เลือกเกินเวลาปัจจุบัน
+    final isTimePassed = selectedDateTime.isBefore(currentTime);
+
+    if (isTimePassed) {
       showDialog(
         context: context,
         builder: (context) {
@@ -54,10 +55,7 @@ class _TimeSelectState extends State<TimeSelect> {
           );
         },
       );
-    } else {
-      // เวลาถูกต้อง
-      // ให้ทำบางสิ่งที่คุณต้องการที่นี่
-    }
+    } else {}
   }
 
   @override
@@ -76,7 +74,7 @@ class _TimeSelectState extends State<TimeSelect> {
                     },
                     child: Text('ปิด',
                         style: GoogleFonts.notoSansThai(
-                            fontWeight: FontWeight.w500, color: Colors.black)),
+                            fontWeight: FontWeight.w500, color: Colors.grey)),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(80, 0, 0, 0),
@@ -88,20 +86,7 @@ class _TimeSelectState extends State<TimeSelect> {
                   )
                 ],
               ),
-              //const SizedBox(height: 20),
-              // TextField(
-              //   style: GoogleFonts.notoSansThai(color: Colors.indigo),
-              //   decoration: InputDecoration(
-              //       filled: true,
-              //       fillColor: Color.fromARGB(255, 228, 228, 228),
-              //       border: OutlineInputBorder(
-              //         borderRadius: BorderRadius.circular(8.0),
-              //         borderSide: BorderSide.none,
-              //       ),
-              //       hintText: "Search",
-              //       suffixIcon: Icon(Icons.search_outlined),
-              //       prefixIconColor: Colors.indigo),
-              // ),
+              const Divider(height: 10),
               const SizedBox(height: 10),
               Expanded(
                 child: ListView.builder(
@@ -110,6 +95,17 @@ class _TimeSelectState extends State<TimeSelect> {
                     final car = cars[index];
                     final time = car['time'];
                     final formattedTime = time.substring(0, 5);
+                    final currentTime = DateTime.now();
+                    final selectedDateTime = DateTime(
+                      currentTime.year,
+                      currentTime.month,
+                      currentTime.day,
+                      int.parse(time.split(':')[0]),
+                      int.parse(time.split(':')[1]),
+                      int.parse(time.split(':')[2]),
+                    );
+
+                    final isTimePassed = selectedDateTime.isBefore(currentTime);
                     return Container(
                       margin: EdgeInsets.symmetric(vertical: 15.0),
                       child: Column(
@@ -118,7 +114,7 @@ class _TimeSelectState extends State<TimeSelect> {
                             children: [
                               TextButton(
                                 onPressed: () {
-                                  // checkAndReserveTime(time);
+                                  checkAndReserveTime(time);
                                   Navigator.pop(context, time);
                                 },
                                 child: Text(
@@ -126,7 +122,9 @@ class _TimeSelectState extends State<TimeSelect> {
                                   style: GoogleFonts.notoSansThai(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 16,
-                                      color: Colors.indigo),
+                                      color: isTimePassed
+                                          ? Colors.grey
+                                          : Colors.indigo),
                                 ),
                               )
                             ],
